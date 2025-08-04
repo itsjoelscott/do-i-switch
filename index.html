@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -285,69 +286,74 @@
   
 
   <script>
-    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-<script>
-  function symbolify(value) {
-    if (!value) return '';
-    const v = value.trim().toLowerCase();
-    if (v === 'check' || v === '✔' || v === 'yes' || v === '✅' || v === '✓') return '✅';
-    if (v === 'x' || v === '✖' || v === 'no' || v === '❌') return '❌';
-    if (v === 'caveat' || v === '!' || v === 'warning' || v === '⚠️') return '⚠️';
-    return value;
-  }
+    
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script>
+    // Helper to normalize symbols like check/x/caveat to emoji
+    function symbolify(value) {
+      if (!value) return '';
+      const v = value.trim().toLowerCase();
+      if (v === 'check' || v === 'yes' || v === '✔' || v === '✅') return '✅';
+      if (v === 'x' || v === 'no' || v === '✖' || v === '❌') return '❌';
+      if (v === 'caveat' || v === '!' || v === 'warning' || v === '⚠️') return '⚠️';
+      return value;
+    }
 
-  let comparisonData = [];
-  const csvUrl = 'https://raw.githubusercontent.com/itsjoelscott/do-i-switch/dd1a495e542652fc1b4254ce4af69496b1c6da5f/comparison.csv';
+    let comparisonData = [];
 
-  function loadComparisonData(callback) {
-    Papa.parse(csvUrl, {
-      download: true,
-      header: true,
-      skipEmptyLines: true,
-      complete: function(results) {
-        comparisonData = results.data.map(r => ({
-          Feature: r.Feature || '',
-          iPhone: symbolify(r.iPhone || r['iPhone'] || ''),
-          Android: symbolify(r.Android || r['Android'] || ''),
-          Explanation: r.Explanation || '',
-          Category: r.Category || ''
-        }));
-        if (typeof callback === 'function') callback();
-      },
-      error: function(err) {
-        console.error('Failed to load CSV:', err);
-        const tbody = document.getElementById('comparison-body');
-        if (tbody) tbody.innerHTML = '<tr><td colspan="4">Failed to load comparison data.</td></tr>';
-      }
-    });
-  }
+    const csvUrl = 'https://raw.githubusercontent.com/itsjoelscott/do-i-switch/dd1a495e542652fc1b4254ce4af69496b1c6da5f/comparison.csv';
 
-  function renderTable(filterCategory, searchQuery) {
-    const tbody = document.getElementById('comparison-body');
-    if (!tbody) return;
-    tbody.innerHTML = '';
-    const query = (searchQuery || '').trim().toLowerCase();
-    comparisonData.forEach(row => {
-      if (filterCategory && row.Category !== filterCategory) return;
-      if (query) {
-        const inFeature = row.Feature.toLowerCase().includes(query);
-        const inExplanation = row.Explanation.toLowerCase().includes(query);
-        if (!inFeature && !inExplanation) return;
-      }
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${row.Feature}</td>
-        <td class="center">${row.iPhone}</td>
-        <td class="center">${row.Android}</td>
-        <td>${row.Explanation}</td>
-      `;
-      tbody.appendChild(tr);
-    });
-  }
+    function loadComparisonData(callback) {
+      Papa.parse(csvUrl, {
+        download: true,
+        header: true,
+        skipEmptyLines: true,
+        complete: function(results) {
+          comparisonData = results.data.map(r => ({
+            Feature: r.Feature || '',
+            iPhone: symbolify(r.iPhone || r['iPhone'] || ''),
+            Android: symbolify(r.Android || r['Android'] || ''),
+            Explanation: r.Explanation || '',
+            Category: r.Category || ''
+          }));
+          if (typeof callback === 'function') callback();
+        },
+        error: function(err) {
+          console.error('Failed to load CSV:', err);
+          const tbody = document.getElementById("comparison-body");
+          if (tbody) {
+            tbody.innerHTML = '<tr><td colspan="4" style="color:red;">Failed to load comparison data. Check console for error.</td></tr>';
+          }
+        }
+      });
+    }
 
-  function populateModalCategories() {
-    const categorySelectModal = document.getElementById('suggest-category');
-    if (categorySelectModal) {
+    function renderTable(filterCategory, searchQuery) {
+      const tbody = document.getElementById("comparison-body");
+      if (!tbody) return;
+      tbody.innerHTML = "";
+      const query = (searchQuery||"").trim().toLowerCase();
+      comparisonData.forEach(row => {
+        if (filterCategory && row.Category !== filterCategory) return;
+        if (query) {
+          const inFeature = row.Feature.toLowerCase().includes(query);
+          const inExplanation = row.Explanation.toLowerCase().includes(query);
+          if (!inFeature && !inExplanation) return;
+        }
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${row.Feature}</td>
+          <td class="center">${row.iPhone}</td>
+          <td class="center">${row.Android}</td>
+          <td>${row.Explanation}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function populateModalCategories() {
+      const categorySelectModal = document.getElementById('suggest-category');
+      if (!categorySelectModal) return;
       categorySelectModal.innerHTML = '<option value="">(optional) choose category</option>';
       const categories = Array.from(new Set(comparisonData.map(r => r.Category).filter(c => c)));
       categories.sort();
@@ -358,50 +364,109 @@
         categorySelectModal.appendChild(opt);
       });
     }
-    const mainFilter = document.getElementById('category-filter');
-    if (mainFilter) {
-      mainFilter.innerHTML = '<option value="">All Categories</option>';
-      const categories = Array.from(new Set(comparisonData.map(r => r.Category).filter(c => c)));
-      categories.sort();
-      categories.forEach(c => {
-        const opt = document.createElement('option');
-        opt.value = c;
-        opt.textContent = c;
-        mainFilter.appendChild(opt);
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadComparisonData(() => {
+        renderTable("", "");
+        populateModalCategories();
+
+        const categorySelect = document.getElementById("category-filter");
+        const searchBox = document.getElementById("search-box");
+        const clearBtn = document.getElementById("clear-filters");
+
+        function applyFilters() {
+          renderTable(categorySelect.value, searchBox.value);
+        }
+        if (categorySelect) categorySelect.addEventListener("change", applyFilters);
+        if (searchBox) searchBox.addEventListener("input", applyFilters);
+        if (clearBtn) clearBtn.addEventListener("click", () => {
+          if (categorySelect) categorySelect.value = "";
+          if (searchBox) searchBox.value = "";
+          renderTable("", "");
+        });
+
+        document.getElementById('local-count').textContent = localStorage.getItem('simple_pageview_count') || '0';
+      });
+    });
+  </script>
+
+    // previous renderTable moved into dynamic loader; nothing else here.
+    function renderTable(filterCategory, searchQuery) {
+      const tbody = document.getElementById("comparison-body");
+      tbody.innerHTML = "";
+      const query = (searchQuery||"").trim().toLowerCase();
+      comparisonData.forEach(row => {
+        if (filterCategory && row.Category !== filterCategory) return;
+        if (query) {
+          const inFeature = row.Feature.toLowerCase().includes(query);
+          const inExplanation = row.Explanation.toLowerCase().includes(query);
+          if (!inFeature && !inExplanation) return;
+        }
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${row.Feature}</td>
+          <td class="center">${row.iPhone}</td>
+          <td class="center">${row.Android}</td>
+          <td>${row.Explanation}</td>
+        `;
+        tbody.appendChild(tr);
       });
     }
-  }
+    // (legacy static initialization removed; dynamic loader handles rendering and filter wiring)
 
-  document.addEventListener('DOMContentLoaded', () => {
-    loadComparisonData(() => {
-      renderTable('', '');
-      populateModalCategories();
-
-      const categorySelect = document.getElementById('category-filter');
-      const searchBox = document.getElementById('search-box');
-      const clearBtn = document.getElementById('clear-filters');
-
-      function applyFilters() {
-        renderTable(categorySelect?.value || '', searchBox?.value || '');
-      }
-      if (categorySelect) categorySelect.addEventListener('change', applyFilters);
-      if (searchBox) searchBox.addEventListener('input', applyFilters);
-      if (clearBtn) {
-        clearBtn.addEventListener('click', () => {
-          if (categorySelect) categorySelect.value = '';
-          if (searchBox) searchBox.value = '';
-          renderTable('', '');
-        });
-      }
-
-      const countEl = document.getElementById('local-count');
-      if (countEl) {
-        countEl.textContent = localStorage.getItem('simple_pageview_count') || '0';
-      }
+    // Suggestion modal logic
+    const suggestBtn = document.getElementById('recommend-btn');
+    const modal = document.getElementById('suggestion-modal');
+    const closeModal = document.getElementById('close-modal');
+    const submitBtn = document.getElementById('submit-suggestion');
+    const feedback = document.getElementById('suggestion-feedback');
+    const categorySelectModal = document.getElementById('suggest-category');
+    // populate categories
+    const categories = Array.from(new Set(comparisonData.map(r => r.Category).filter(c => c)));
+    categories.sort();
+    categories.forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = c;
+      opt.textContent = c;
+      categorySelectModal.appendChild(opt);
     });
-  });
-</script>
-
+    function openModal() {
+      modal.style.display = 'flex';
+      modal.setAttribute('aria-hidden','false');
+      document.body.style.overflow='hidden';
+    }
+    function close() {
+      modal.style.display='none';
+      modal.setAttribute('aria-hidden','true');
+      document.body.style.overflow='';
+      feedback.textContent='';
+    }
+    suggestBtn.addEventListener('click', openModal);
+    closeModal.addEventListener('click', close);
+    submitBtn.addEventListener('click', () => {
+      const feature = document.getElementById('suggest-feature').value.trim();
+      const desc = document.getElementById('suggest-desc').value.trim();
+      const category = document.getElementById('suggest-category').value;
+      if (!feature) {
+        feedback.textContent='Please provide a feature name.';
+        return;
+      }
+      if (!desc) {
+        feedback.textContent='Please provide a description.';
+        return;
+      }
+      const subject = encodeURIComponent('Suggestion: ' + feature);
+      let body = '';
+      body += 'Feature: ' + feature + '\n';
+      if (category) body += 'Category: ' + category + '\n';
+      body += 'Description: ' + desc + '\n';
+      body += 'Page URL: ' + window.location.href + '\n';
+      body += 'User Agent: ' + navigator.userAgent + '\n';
+      const mailtoLink = 'mailto:noreply@shouldiswitch.com?subject=' + subject + '&body=' + encodeURIComponent(body);
+      window.location.href = mailtoLink;
+      feedback.textContent = 'If your email client did not open, please copy this and email manually: noreply@shouldiswitch.com';
+    });
+  </script>
   <div style="display:none;"></div>
 </body>
 </html>
