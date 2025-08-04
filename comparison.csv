@@ -128,4 +128,6 @@
 127,"Rich lock screen shortcuts (widgets, media)",UX,✅,✅,"Both offer, but style/interaction differ."
 128,"Cross-device audio handoff (e.g., AirPods between Apple gear)",Audio,✅,❌,Android lacks seamless switching across dissimilar devices unless same brand ecosystem.
 129,Backup of Health data across devices,Health,✅,❌,Apple Health sync doesn’t port; Android requires third-party solutions.
+
 130,Intent-based inter-app communication,Productivity,❌,✅,Android’s intent system enables richer app-to-app actions.
+131,test, sample,❌,❌,details here
