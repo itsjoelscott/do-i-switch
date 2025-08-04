@@ -27,6 +27,19 @@
       margin-bottom: 1rem;
       color: #555;
     }
+    .controls {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    .controls input,
+    .controls select {
+      padding: 0.5rem;
+      font-size: 0.9rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+    }
     table {
       width: 100%;
       border-collapse: collapse;
@@ -51,18 +64,6 @@
     }
     tr:nth-child(even) {
       background: #f9f9fb;
-    }
-    .status {
-      margin-top: 0.5rem;
-      font-size: 0.85rem;
-      color: #666;
-    }
-    .small {
-      font-size: 0.75rem;
-      color: #999;
-    }
-    .emoji {
-      font-weight: bold;
     }
     @media (max-width: 900px) {
       table, thead, tbody, th, td, tr {
@@ -100,6 +101,18 @@
     <p class="subheader">
       Switching between iphone and android can be a stressful decision. Here we broke it down by category with explanations for each area that you should keep in mind when considering a switch!
     </p>
+    <div class="controls">
+      <label>
+        Category:
+        <select id="category-filter">
+          <option value="">All Categories</option>
+        </select>
+      </label>
+      <label>
+        Search:
+        <input type="text" id="search-box" placeholder="Search..." />
+      </label>
+    </div>
     <div class="status" id="status">Loading comparison table…</div>
     <div style="overflow:auto;">
       <table id="comparison-table" aria-label="iPhone vs Android comparison" hidden>
@@ -108,25 +121,28 @@
       </table>
     </div>
     <p class="small">
-      Data source: comparison.csv at specific commit. (Uses raw CSV fetch from GitHub.) 
+      Data source: comparison.csv at specific commit.
     </p>
   </div>
 
   <script>
-    // Fetch and parse CSV (basic RFC4180-aware)
+    let allRows = [];
+
     async function fetchAndRender() {
       const statusEl = document.getElementById('status');
       const rawUrl = 'https://raw.githubusercontent.com/itsjoelscott/do-i-switch/1296845b511408abc7c76d6bc564f2e0db90577d/comparison.csv';
       try {
         const res = await fetch(rawUrl);
-        if (!res.ok) throw new Error('Failed to load CSV: ' + res.status);
+        if (!res.ok) throw new Error(res.statusText);
         const text = await res.text();
         const rows = parseCSV(text);
-        if (rows.length === 0) {
+        if (!rows.length) {
           statusEl.textContent = 'CSV is empty or malformed.';
           return;
         }
+        allRows = rows;
         buildTable(rows);
+        populateCategoryFilter(rows);
         statusEl.textContent = '';
       } catch (e) {
         statusEl.textContent = 'Error loading table: ' + e.message;
@@ -134,66 +150,27 @@
       }
     }
 
-    // Simple RFC4180 CSV parser supporting quoted fields with commas/newlines
     function parseCSV(text) {
       const rows = [];
-      let i = 0;
-      const len = text.length;
-      let current = '';
-      let row = [];
-      let inQuotes = false;
-
+      let i = 0, len = text.length;
+      let current = '', row = [], inQuotes = false;
       while (i < len) {
         const char = text[i];
-
         if (inQuotes) {
           if (char === '"') {
-            if (i + 1 < len && text[i + 1] === '"') {
-              current += '"'; // escaped quote
-              i += 2;
-              continue;
-            } else {
-              inQuotes = false;
-              i++;
-              continue;
-            }
-          } else {
-            current += char;
+            if (i + 1 < len && text[i + 1] === '"') { current += '"'; i += 2; continue; }
+            inQuotes = false;
             i++;
-            continue;
-          }
+          } else { current += char; i++; }
         } else {
-          if (char === '"') {
-            inQuotes = true;
-            i++;
-            continue;
-          }
-          if (char === ',') {
-            row.push(current);
-            current = '';
-            i++;
-            continue;
-          }
-          if (char === '\r') {
-            i++; // skip
-            continue;
-          }
-          if (char === '\n') {
-            row.push(current);
-            rows.push(row);
-            row = [];
-            current = '';
-            i++;
-            continue;
-          }
-          current += char;
-          i++;
+          if (char === '"') { inQuotes = true; i++; }
+          else if (char === ',') { row.push(current); current = ''; i++; }
+          else if (char === '\r') { i++; }
+          else if (char === '\n') { row.push(current); rows.push(row); row = []; current = ''; i++; }
+          else { current += char; i++; }
         }
       }
-      // last value
-      if (current !== '' || text.endsWith(',')) {
-        row.push(current);
-      }
+      if (current !== '' || text.endsWith(',')) row.push(current);
       if (row.length) rows.push(row);
       return rows;
     }
@@ -203,31 +180,59 @@
       const tbody = document.getElementById('table-body');
       const table = document.getElementById('comparison-table');
       table.hidden = false;
+      thead.innerHTML = '';
+      tbody.innerHTML = '';
 
-      // Header row
+      // header
       const headerRow = document.createElement('tr');
-      rows[0].forEach(h => {
+      rows[0].forEach(text => {
         const th = document.createElement('th');
-        th.textContent = h;
+        th.textContent = text;
         headerRow.appendChild(th);
       });
       thead.appendChild(headerRow);
 
-      // Data rows
+      // body
       for (let r = 1; r < rows.length; r++) {
         const tr = document.createElement('tr');
         rows[r].forEach((cell, idx) => {
           const td = document.createElement('td');
-          // if mobile view, add data-label for readability
-          td.setAttribute('data-label', rows[0][idx] || '');
-          // Try to inject simple emoji for check/x/! if cell is exactly those or contains them
-          const content = document.createElement('div');
-          content.className = 'value';
-          content.textContent = cell;
-          td.appendChild(content);
+          td.setAttribute('data-label', rows[0][idx]);
+          td.textContent = cell;
           tr.appendChild(td);
         });
         tbody.appendChild(tr);
+      }
+    }
+
+    function populateCategoryFilter(rows) {
+      const select = document.getElementById('category-filter');
+      const idx = rows[0].indexOf('Category');
+      if (idx < 0) return;
+      const categories = new Set(rows.slice(1).map(r => r[idx]));
+      categories.forEach(cat => {
+        const opt = document.createElement('option');
+        opt.value = cat;
+        opt.textContent = cat;
+        select.appendChild(opt);
+      });
+      select.addEventListener('change', filterTable);
+      document.getElementById('search-box').addEventListener('input', filterTable);
+    }
+
+    function filterTable() {
+      const select = document.getElementById('category-filter');
+      const query = document.getElementById('search-box').value.toLowerCase();
+      const table = document.getElementById('comparison-table');
+      const rows = table.tBodies[0].rows;
+      const headers = [...table.tHead.rows[0].cells].map(th => th.textContent);
+      const catIdx = headers.indexOf('Category');
+
+      for (let row of rows) {
+        const cells = [...row.cells].map(td => td.textContent.toLowerCase());
+        const matchesCategory = !select.value || cells[catIdx] === select.value.toLowerCase();
+        const matchesSearch = !query || cells.some(c => c.includes(query));
+        row.style.display = (matchesCategory && matchesSearch) ? '' : 'none';
       }
     }
 
