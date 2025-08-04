@@ -67,10 +67,10 @@
       text-align: left;
       word-break: break-word;
     }
-    /* Center iPhone and Android columns */
-    td[data-label="iPhone"],
+    /* Center iOS and Android columns */
+    td[data-label="iOS"],
     td[data-label="Android"],
-    th[data-label="iPhone"],
+    th[data-label="iOS"],
     th[data-label="Android"] {
       text-align: center;
       min-width: 4rem;
@@ -116,7 +116,7 @@
       }
       /* Auto-size key columns but not shrink below header width */
       th[data-label="Category"], td[data-label="Category"],
-      th[data-label="iPhone"], td[data-label="iPhone"],
+      th[data-label="iOS"], td[data-label="iOS"],
       th[data-label="Android"], td[data-label="Android"] {
         width: auto;
         min-width: max-content;
@@ -158,7 +158,7 @@
     </div>
     <div class="status" id="status">Loading comparison table…</div>
     <div class="table-wrapper">
-      <table id="comparison-table" aria-label="iPhone vs Android comparison" hidden>
+      <table id="comparison-table" aria-label="iOS vs Android comparison" hidden>
         <thead id="table-head"></thead>
         <tbody id="table-body"></tbody>
       </table>
@@ -210,25 +210,41 @@
       const headers = rows[0], expIdx = headers.indexOf('Explanation');
       const hr = document.createElement('tr');
       const thToggle = document.createElement('th'); thToggle.className = 'toggle-cell'; hr.appendChild(thToggle);
-      headers.forEach(h => { const th = document.createElement('th'); th.textContent = h; th.setAttribute('data-label', h); hr.appendChild(th); });
+      headers.forEach(h => {
+        const th = document.createElement('th');
+        const label = h === 'iPhone' ? 'iOS' : h;
+        th.textContent = label;
+        th.setAttribute('data-label', label);
+        hr.appendChild(th);
+      });
       thead.appendChild(hr);
       rows.slice(1).forEach(row => {
         const tr = document.createElement('tr');
         const tc = document.createElement('td'); tc.className = 'toggle-cell';
         const btn = document.createElement('button'); btn.className = 'exp-toggle'; btn.textContent = '▶'; tc.appendChild(btn);
         tr.appendChild(tc);
-        row.forEach((c, i) => { const td = document.createElement('td'); td.textContent = c; td.setAttribute('data-label', headers[i]); tr.appendChild(td); });
+        row.forEach((c, i) => {
+          const td = document.createElement('td');
+          const header = headers[i] === 'iPhone' ? 'iOS' : headers[i];
+          td.setAttribute('data-label', header);
+          td.textContent = c;
+          tr.appendChild(td);
+        });
         tbody.appendChild(tr);
         const er = document.createElement('tr'); er.className = 'exp-row';
-        const ec = document.createElement('td'); ec.className = 'exp-cell'; ec.colSpan = headers.length + 1; ec.textContent = row[expIdx] || '';
-        er.appendChild(ec); tbody.appendChild(er);
+        const ec = document.createElement('td'); ec.className = 'exp-cell'; ec.colSpan = headers.length + 1;
+        ec.textContent = row[expIdx] || '';
+        er.appendChild(ec);
+        tbody.appendChild(er);
       });
       document.getElementById('comparison-table').hidden = false;
     }
     function populateCategoryFilter(rows) {
       const sel = document.getElementById('category-filter'), idx = rows[0].indexOf('Category');
       if (idx < 0) return;
-      new Set(rows.slice(1).map(r => r[idx])).forEach(cat => { const o = document.createElement('option'); o.value = cat; o.textContent = cat; sel.appendChild(o); });
+      new Set(rows.slice(1).map(r => r[idx])).forEach(cat => {
+        const o = document.createElement('option'); o.value = cat; o.textContent = cat; sel.appendChild(o);
+      });
       sel.addEventListener('change', filterTable);
       document.getElementById('search-box').addEventListener('input', filterTable);
     }
