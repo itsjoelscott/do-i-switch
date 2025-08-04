@@ -14,7 +14,7 @@
       line-height: 1.4;
     }
     .container {
-      
+      width: 100%;
       max-width: 1100px;
       margin: auto;
       padding: 1rem 0;
@@ -46,12 +46,11 @@
     }
     .table-wrapper {
       margin-top: 1rem;
-      /* Prevent horizontal scrolling */
       overflow-x: auto;
     }
     table {
       width: 100%;
-      table-layout: fixed;
+      table-layout: auto;
       border-collapse: collapse;
       background: #fff;
       box-shadow: 0 2px 8px rgba(0,0,0,0.05);
@@ -74,6 +73,10 @@
     th[data-label="iPhone"],
     th[data-label="Android"] {
       text-align: center;
+      /* Adjust width for readability */
+      min-width: 4rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
     }
     /* Hide the '#' column */
     th[data-label="#"],
@@ -121,8 +124,6 @@
       word-break: break-word;
       overflow-wrap: break-word;
       box-sizing: border-box;
-      /* Ensure content matches table width */
-      width: 100%;
     }
   </style>
 </head>
@@ -192,22 +193,17 @@
       const thead = document.getElementById('table-head'), tbody = document.getElementById('table-body');
       thead.innerHTML = ''; tbody.innerHTML = '';
       const headers = rows[0], expIdx = headers.indexOf('Explanation');
-      // Header
       const hr = document.createElement('tr');
       const thToggle = document.createElement('th'); thToggle.className = 'toggle-cell'; hr.appendChild(thToggle);
       headers.forEach(h => { const th = document.createElement('th'); th.textContent = h; th.setAttribute('data-label', h); hr.appendChild(th); });
       thead.appendChild(hr);
-      // Rows
       rows.slice(1).forEach(row => {
         const tr = document.createElement('tr');
-        // toggle
         const tc = document.createElement('td'); tc.className = 'toggle-cell';
         const btn = document.createElement('button'); btn.className = 'exp-toggle'; btn.textContent = '▶'; tc.appendChild(btn);
         tr.appendChild(tc);
-        // data
-        row.forEach((c,i) => { const td = document.createElement('td'); td.textContent = c; td.setAttribute('data-label', headers[i]); tr.appendChild(td); });
+        row.forEach((c, i) => { const td = document.createElement('td'); td.textContent = c; td.setAttribute('data-label', headers[i]); tr.appendChild(td); });
         tbody.appendChild(tr);
-        // explanation
         const er = document.createElement('tr'); er.className = 'exp-row';
         const ec = document.createElement('td'); ec.className = 'exp-cell'; ec.colSpan = headers.length + 1; ec.textContent = row[expIdx] || '';
         er.appendChild(ec); tbody.appendChild(er);
@@ -217,20 +213,22 @@
     function populateCategoryFilter(rows) {
       const sel = document.getElementById('category-filter'), idx = rows[0].indexOf('Category');
       if (idx < 0) return;
-      new Set(rows.slice(1).map(r=>r[idx])).forEach(cat=>{ const o = document.createElement('option'); o.value = cat; o.textContent = cat; sel.appendChild(o); });
-      sel.addEventListener('change', filterTable); document.getElementById('search-box').addEventListener('input', filterTable);
+      new Set(rows.slice(1).map(r => r[idx])).forEach(cat => { const o = document.createElement('option'); o.value = cat; o.textContent = cat; sel.appendChild(o); });
+      sel.addEventListener('change', filterTable);
+      document.getElementById('search-box').addEventListener('input', filterTable);
     }
     function filterTable() {
       const selVal = document.getElementById('category-filter').value.toLowerCase();
       const q = document.getElementById('search-box').value.toLowerCase();
       const rows = Array.from(document.getElementById('comparison-table').tBodies[0].rows);
-      const headers = Array.from(document.querySelectorAll('#comparison-table thead th')).map(th=>th.textContent);
+      const headers = Array.from(document.querySelectorAll('#comparison-table thead th')).map(th => th.textContent);
       const catIdx = headers.indexOf('Category');
-      for (let i=0;i<rows.length;i+=2) {
-        const r=rows[i], er=rows[i+1];
-        const cells = Array.from(r.cells).map(td=>td.textContent.toLowerCase());
-        const show = (!selVal || cells[catIdx]===selVal) && (!q || cells.some(c=>c.includes(q)));
-        r.style.display = show ? '' : 'none'; er.style.display = 'none';
+      for (let i = 0; i < rows.length; i += 2) {
+        const r = rows[i], er = rows[i + 1];
+        const cells = Array.from(r.cells).map(td => td.textContent.toLowerCase());
+        const show = (!selVal || cells[catIdx] === selVal) && (!q || cells.some(c => c.includes(q)));
+        r.style.display = show ? '' : 'none';
+        er.style.display = 'none';
       }
     }
     document.addEventListener('click', e => {
