@@ -14,41 +14,44 @@
       line-height: 1.4;
     }
     .container {
+      
       max-width: 1100px;
       margin: auto;
       padding: 1rem 0;
     }
     h1 {
-      font-size: 2.5rem;
+      font-size: 2rem;
       margin-bottom: 0.2rem;
       text-align: center;
     }
     .subheader {
-      font-size: 1.1rem;
+      font-size: 1rem;
       margin-bottom: 1rem;
       color: #555;
       text-align: center;
     }
     .controls {
       display: flex;
-      gap: 1rem;
-      margin-bottom: 1rem;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
       flex-wrap: wrap;
       justify-content: center;
     }
     .controls input,
     .controls select {
-      padding: 0.5rem;
-      font-size: 0.9rem;
+      padding: 0.4rem;
+      font-size: 0.85rem;
       border: 1px solid #cbd5e1;
       border-radius: 4px;
     }
     .table-wrapper {
-      overflow-x: auto;
       margin-top: 1rem;
+      /* Prevent horizontal scrolling */
+      overflow-x: auto;
     }
     table {
       width: 100%;
+      table-layout: fixed;
       border-collapse: collapse;
       background: #fff;
       box-shadow: 0 2px 8px rgba(0,0,0,0.05);
@@ -58,12 +61,12 @@
       color: #fff;
     }
     th, td {
-      padding: 0.6rem 0.75rem;
+      padding: 0.5rem;
       border: 1px solid #e2e8f0;
       vertical-align: top;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       text-align: left;
-      position: relative;
+      word-break: break-word;
     }
     /* Center iPhone and Android columns */
     td[data-label="iPhone"],
@@ -92,7 +95,7 @@
       /* Show toggle cell in main row */
       #comparison-table .toggle-cell {
         display: table-cell !important;
-        width: 1.5rem;
+        width: 1.2rem;
       }
       #comparison-table .toggle-cell .exp-toggle {
         background: none;
@@ -103,15 +106,23 @@
         margin: 0;
         line-height: 1;
       }
+      th, td {
+        padding: 0.4rem;
+        font-size: 0.75rem;
+      }
     }
-
     /* Explanation row hidden by default */
     .exp-row { display: none; }
     /* Styles for explanation row when visible */
     .exp-cell {
       padding: 0.75rem;
       border: 1px solid #e2e8f0;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
+      word-break: break-word;
+      overflow-wrap: break-word;
+      box-sizing: border-box;
+      /* Ensure content matches table width */
+      width: 100%;
     }
   </style>
 </head>
@@ -157,12 +168,12 @@
     }
     function parseCSV(text) {
       const rows = [];
-      let i=0, len=text.length, cur='', row=[], inQ=false;
-      while (i<len) {
+      let i = 0, len = text.length, cur = '', row = [], inQ = false;
+      while (i < len) {
         const ch = text[i];
         if (inQ) {
           if (ch === '"') {
-            if (i+1<len && text[i+1]==='"') { cur += '"'; i += 2; continue; }
+            if (i + 1 < len && text[i+1] === '"') { cur += '"'; i += 2; continue; }
             inQ = false; i++;
           } else { cur += ch; i++; }
         } else {
@@ -179,39 +190,35 @@
     }
     function buildTable(rows) {
       const thead = document.getElementById('table-head'), tbody = document.getElementById('table-body');
-      thead.innerHTML = '';
-      tbody.innerHTML = '';
+      thead.innerHTML = ''; tbody.innerHTML = '';
       const headers = rows[0], expIdx = headers.indexOf('Explanation');
-      // Header row
+      // Header
       const hr = document.createElement('tr');
       const thToggle = document.createElement('th'); thToggle.className = 'toggle-cell'; hr.appendChild(thToggle);
       headers.forEach(h => { const th = document.createElement('th'); th.textContent = h; th.setAttribute('data-label', h); hr.appendChild(th); });
       thead.appendChild(hr);
-      // Data rows
+      // Rows
       rows.slice(1).forEach(row => {
         const tr = document.createElement('tr');
-        // toggle cell
+        // toggle
         const tc = document.createElement('td'); tc.className = 'toggle-cell';
         const btn = document.createElement('button'); btn.className = 'exp-toggle'; btn.textContent = '▶'; tc.appendChild(btn);
         tr.appendChild(tc);
-        // data cells
+        // data
         row.forEach((c,i) => { const td = document.createElement('td'); td.textContent = c; td.setAttribute('data-label', headers[i]); tr.appendChild(td); });
         tbody.appendChild(tr);
-        // explanation row
+        // explanation
         const er = document.createElement('tr'); er.className = 'exp-row';
-        const ec = document.createElement('td'); ec.className = 'exp-cell'; ec.colSpan = headers.length+1; ec.textContent = row[expIdx] || '';
-        er.appendChild(ec);
-        tbody.appendChild(er);
+        const ec = document.createElement('td'); ec.className = 'exp-cell'; ec.colSpan = headers.length + 1; ec.textContent = row[expIdx] || '';
+        er.appendChild(ec); tbody.appendChild(er);
       });
       document.getElementById('comparison-table').hidden = false;
     }
     function populateCategoryFilter(rows) {
-      const sel = document.getElementById('category-filter');
-      const idx = rows[0].indexOf('Category');
-      if (idx<0) return;
-      new Set(rows.slice(1).map(r=>r[idx])).forEach(cat=>{ const o=document.createElement('option'); o.value=cat; o.textContent=cat; sel.appendChild(o); });
-      sel.addEventListener('change', filterTable);
-      document.getElementById('search-box').addEventListener('input', filterTable);
+      const sel = document.getElementById('category-filter'), idx = rows[0].indexOf('Category');
+      if (idx < 0) return;
+      new Set(rows.slice(1).map(r=>r[idx])).forEach(cat=>{ const o = document.createElement('option'); o.value = cat; o.textContent = cat; sel.appendChild(o); });
+      sel.addEventListener('change', filterTable); document.getElementById('search-box').addEventListener('input', filterTable);
     }
     function filterTable() {
       const selVal = document.getElementById('category-filter').value.toLowerCase();
@@ -221,15 +228,15 @@
       const catIdx = headers.indexOf('Category');
       for (let i=0;i<rows.length;i+=2) {
         const r=rows[i], er=rows[i+1];
-        const cells=Array.from(r.cells).map(td=>td.textContent.toLowerCase());
-        const show=(!selVal||cells[catIdx]===selVal)&&(!q||cells.some(c=>c.includes(q)));
-        r.style.display=show?'':'none'; er.style.display='none';
+        const cells = Array.from(r.cells).map(td=>td.textContent.toLowerCase());
+        const show = (!selVal || cells[catIdx]===selVal) && (!q || cells.some(c=>c.includes(q)));
+        r.style.display = show ? '' : 'none'; er.style.display = 'none';
       }
     }
-    document.addEventListener('click',e=>{
-      if(e.target.classList.contains('exp-toggle')){
-        const btn=e.target; const tr=btn.closest('tr'); const er=tr.nextElementSibling;
-        const open=er.style.display==='table-row'; er.style.display=open?'none':'table-row'; btn.textContent=open?'▶':'▼';
+    document.addEventListener('click', e => {
+      if (e.target.classList.contains('exp-toggle')) {
+        const btn = e.target; const tr = btn.closest('tr'); const er = tr.nextElementSibling;
+        const open = er.style.display === 'table-row'; er.style.display = open ? 'none' : 'table-row'; btn.textContent = open ? '▶' : '▼';
       }
     });
     fetchAndRender();
