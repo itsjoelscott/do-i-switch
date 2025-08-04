@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Should I Switch?</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="Should I Switch? A side-by-side breakdown of iPhone vs Android features with search and filtering.">
+  <meta name="robots" content="index,follow">
+  <style>
+    :root {
+      --max-width: 1200px;
+      --sidebar-width: 300px;
+      --gap: 16px;
+      font-family: system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+    }
+    body { margin:0; padding:0; background:#f2f4f7; }
+    .container {
+      display:flex;
+      max-width: var(--max-width);
+      margin:0 auto;
+      padding:24px;
+      gap: var(--gap);
+    }
+    .main {
+      flex:1;
+      background:#fff;
+      padding:24px;
+      border-radius:12px;
+      box-shadow:0 4px 20px rgba(0,0,0,0.08);
+      overflow-x:auto;
+    }
+    h1 { margin-top:0; font-size:2.5rem; font-weight:700; text-align:center; }
+    h2 { margin-top:4px; font-size:1.1rem; color:#555; font-weight:400; text-align:center; }
+    .controls {
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin:16px 0;
+      justify-content:center;
+      align-items:center;
+    }
+    .controls label { font-size:0.9rem; }
+    .controls input, .controls select {
+      padding:8px 10px;
+      border:1px solid #ccc;
+      border-radius:6px;
+      font-size:1rem;
+      min-width:200px;
+    }
+    table {
+      width:100%;
+      border-collapse:collapse;
+      margin-top:8px;
+    }
+    th, td {
+      padding:12px 8px;
+      border-bottom:1px solid #e1e4ea;
+      vertical-align:top;
+    }
+    th {
+      background:#f7f9fc;
+      text-align:left;
+      font-weight:600;
+      position:sticky;
+      top:0;
+      z-index:1;
+    }
+    .center { text-align:center; }
+    .sidebar {
+      width: var(--sidebar-width);
+      position:sticky;
+      top:24px;
+      align-self:start;
+      background:#fff;
+      padding:16px;
+      border-radius:12px;
+      box-shadow:0 4px 20px rgba(0,0,0,0.08);
+      font-size:14px;
+    }
+    .ad-box {
+      background:#e8eaf0;
+      border:2px dashed #cfd8e8;
+      padding:16px;
+      margin-bottom:24px;
+      border-radius:8px;
+      min-height:180px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      color:#333;
+    }
+    .mobile-ads { display:none; }
+    @media (max-width:1000px){
+      .mobile-ads { display:block; margin-bottom:16px; }
+      .container { flex-direction:column; }
+      .sidebar { display:none; }
+      .mobile-ads .ad-box:nth-child(2){display:none;}
+    }
+    .footer { text-align:center; font-size:12px; margin-top:40px; color:#888; }
+    .clear-btn { margin-left:8px; cursor:pointer; background:#0070f3; color:#fff; border:none; padding:8px 12px; border-radius:6px; }
+    /* Suggestion modal */
+    #suggestion-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:999; align-items:center; justify-content:center; }
+    #suggestion-modal .dialog { background:#fff; border-radius:12px; max-width:500px; width:100%; padding:24px; position:relative; box-shadow:0 20px 60px rgba(0,0,0,0.2); }
+    #suggestion-modal button.close { position:absolute; top:12px; right:12px; background:none; border:none; font-size:18px; cursor:pointer; }
+    #suggest-btn { position:fixed; bottom:24px; right:24px; background:#ffb400; border:none; padding:14px 18px; border-radius:50px; box-shadow:0 10px 30px rgba(0,0,0,0.2); cursor:pointer; font-weight:600; z-index:900; }
+  </style>
+  <!-- Google Analytics placeholder: replace MEASUREMENT_ID with your GA4 ID -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
+</head>
+<body>
+  <script>
+    // Simple local pageview counter
+    const countKey = 'simple_pageview_count';
+    let count = parseInt(localStorage.getItem(countKey) || '0', 10);
+    count += 1;
+    localStorage.setItem(countKey, count);
+    console.log('Local pageview count', count);
+  </script>
+  <div class="container">
+    <div class="main">
+      <div style="max-width:1000px; margin:0 auto;">
+        <h1><strong>Should I Switch?</strong></h1>
+        <h2>Switching between iphone and android can be a stressful decision. Here we broke it down by category with explanations for each area that you should keep in mind when considering a switch!</h2>
+        <div class="mobile-ads" aria-label="Ads for mobile">
+          <div class="ad-box">
+            <div style="font-weight:600;">Ad Slot 1</div>
+            <div style="margin-top:8px;">Your ad could go here. <br/>(e.g., Google AdSense / Affiliate)</div>
+          </div>
+          <div class="ad-box">
+            <div style="font-weight:600;">Ad Slot 2</div>
+            <div style="margin-top:8px;">Secondary ad or sponsor message.</div>
+          </div>
+        </div>
+        <div class="controls">
+          <div>
+            <label for="category-filter">Filter by category:</label>
+            <select id="category-filter">
+              <option value="">All categories</option>
+              <option value="Accessibility">Accessibility</option>
+<option value="Accessories">Accessories</option>
+<option value="Apps &amp; Stores">Apps &amp; Stores</option>
+<option value="Audio">Audio</option>
+<option value="Automation">Automation</option>
+<option value="Automotive">Automotive</option>
+<option value="Backup &amp; Sync">Backup &amp; Sync</option>
+<option value="Browsing">Browsing</option>
+<option value="Communication">Communication</option>
+<option value="Connectivity">Connectivity</option>
+<option value="Convenience">Convenience</option>
+<option value="Customization">Customization</option>
+<option value="Ecosystem">Ecosystem</option>
+<option value="File Management">File Management</option>
+<option value="File Sharing">File Sharing</option>
+<option value="Hardware">Hardware</option>
+<option value="Health">Health</option>
+<option value="Health &amp; Safety">Health &amp; Safety</option>
+<option value="Interaction">Interaction</option>
+<option value="Location &amp; Tracking">Location &amp; Tracking</option>
+<option value="Media">Media</option>
+<option value="Media &amp; Sharing">Media &amp; Sharing</option>
+<option value="Media Casting">Media Casting</option>
+<option value="Messaging">Messaging</option>
+<option value="Mobility">Mobility</option>
+<option value="Notifications">Notifications</option>
+<option value="Payments">Payments</option>
+<option value="Performance">Performance</option>
+<option value="Power User">Power User</option>
+<option value="Privacy">Privacy</option>
+<option value="Privacy/Health">Privacy/Health</option>
+<option value="Productivity">Productivity</option>
+<option value="Safety">Safety</option>
+<option value="Security">Security</option>
+<option value="Software Experience">Software Experience</option>
+<option value="UI/UX">UI/UX</option>
+<option value="UX">UX</option>
+<option value="Updates">Updates</option>
+<option value="Upgrade Path">Upgrade Path</option>
+<option value="User Management">User Management</option>
+<option value="Voice Assistant">Voice Assistant</option>
+            </select>
+          </div>
+          <div>
+            <label for="search-box">Search:</label>
+            <input type="text" id="search-box" placeholder="Type keywords to filter" />
+          </div>
+          <div>
+            <button id="clear-filters" class="clear-btn">Clear</button>
+          </div>
+        </div>
+        <div style="overflow:auto;">
+          <table aria-label="Comparison table">
+            <thead>
+              <tr>
+                <th>Feature</th>
+                <th>iPhone</th>
+                <th>Android</th>
+                <th>Explanation</th>
+              </tr>
+            </thead>
+            <tbody id="comparison-body">
+            </tbody>
+          </table>
+        </div>
+        <div class="footer">Generated by Joel’s comparison tool.
+          <div style="margin-top:4px; font-size:10px;">Local views (this browser): <span id="local-count"></span></div>
+        </div>
+      </div>
+    </div>
+    <div class="sidebar">
+      <div class="ad-box">
+        <div style="font-weight:600;">Ad Slot 1</div>
+        <div style="margin-top:8px;">Your ad could go here. <br/>(e.g., Google AdSense / Affiliate)</div>
+      </div>
+      <div class="ad-box">
+        <div style="font-weight:600;">Ad Slot 2</div>
+        <div style="margin-top:8px;">Secondary ad or sponsor message.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Suggestion Modal -->
+  <div id="suggestion-modal" aria-hidden="true" style="display:none; flex;">
+    <div class="dialog" role="dialog" aria-modal="true" aria-label="Suggest a feature">
+      <button class="close" id="close-modal" aria-label="Close">&times;</button>
+      <h2 style="margin-top:0;">Suggest a Feature</h2>
+      <p>Tell us what feature or comparison you'd like to see.</p>
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <div>
+          <label for="suggest-feature">Feature name</label><br/>
+          <input type="text" id="suggest-feature" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:6px;" placeholder="e.g., Cross-platform clipboard" />
+        </div>
+        <div>
+          <label for="suggest-category">Category</label><br/>
+          <select id="suggest-category" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:6px;">
+            <option value="">(optional) choose category</option>
+          </select>
+        </div>
+        <div>
+          <label for="suggest-desc">Description</label><br/>
+          <textarea id="suggest-desc" rows="4" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:6px;" placeholder="Why this matters or what you'd compare"></textarea>
+        </div>
+        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+          <button id="submit-suggestion" style="padding:10px 16px; background:#0070f3; color:#fff; border:none; border-radius:6px; cursor:pointer;">Send Suggestion</button>
+          <div id="suggestion-feedback" style="flex:1; align-self:center; font-size:14px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button id="suggest-btn">Suggest</button>
+
+  <script>
+    const comparisonData = [{"#":1,"Feature":"iMessage","Category":"Messaging","iPhone":"\u2705","Android":"\u274c","Explanation":"Apple\u2019s proprietary; unavailable on Android."},{"#":2,"Feature":"SMS\/MMS","Category":"Messaging","iPhone":"\u2705","Android":"\u2705","Explanation":"Standard texting interoperates."},{"#":3,"Feature":"RCS (rich messaging)","Category":"Messaging","iPhone":"\u274c","Android":"\u2705","Explanation":"Rich communication standard native to Android."},{"#":4,"Feature":"FaceTime","Category":"Communication","iPhone":"\u2705","Android":"\u274c","Explanation":"Apple video call system; no native Android support."},{"#":5,"Feature":"Third-party video calls (Zoom, Meet)","Category":"Communication","iPhone":"\u2705","Android":"\u2705","Explanation":"Cross-platform apps work both."},{"#":6,"Feature":"AirDrop","Category":"File Sharing","iPhone":"\u2705","Android":"\u274c","Explanation":"Apple\u2019s seamless peer share; Android has Nearby Share (\u26a0\ufe0f) but no cross-platform with iOS."},{"#":7,"Feature":"Universal Clipboard (Apple devices)","Category":"Productivity","iPhone":"\u2705","Android":"\u274c","Explanation":"Clipboard syncing across Apple gear is lost."},{"#":8,"Feature":"Handoff \/ Continuity","Category":"Ecosystem","iPhone":"\u2705","Android":"\u274c","Explanation":"Cross-device session handoff doesn\u2019t carry over."},{"#":9,"Feature":"Call\/Text relay to desktop (Mac)","Category":"Ecosystem","iPhone":"\u2705","Android":"\u274c","Explanation":"Native bridging to Mac unavailable."},{"#":10,"Feature":"App Store curation\/review","Category":"Apps & Stores","iPhone":"\u2705","Android":"\u26a0\ufe0f","Explanation":"Android Play Store is less curated\u2014more freedom but more variability in quality."},{"#":11,"Feature":"System-wide Dark Mode","Category":"UI\/UX","iPhone":"\u2705","Android":"\u2705","Explanation":"Both support."},{"#":12,"Feature":"Home screen widgets","Category":"Customization","iPhone":"\u2705","Android":"\u2705","Explanation":"Android offers more flexibility."},{"#":13,"Feature":"Default app selection","Category":"Customization","iPhone":"\u274c","Android":"\u2705","Explanation":"Android lets you choose defaults freely."},{"#":14,"Feature":"Custom launchers \/ full UI theming","Category":"Customization","iPhone":"\u274c","Android":"\u2705","Explanation":"Android supports deep personalization."},{"#":15,"Feature":"Face ID (secure biometric)","Category":"Security","iPhone":"\u2705","Android":"\u26a0\ufe0f","Explanation":"Android has face unlock variants; security and consistency vary by manufacturer."},{"#":16,"Feature":"Touch ID \/ fingerprint","Category":"Security","iPhone":"\u2705","Android":"\u2705","Explanation":"Both platforms support biometric unlocking (Android varies by device)."},{"#":17,"Feature":"Siri","Category":"Voice Assistant","iPhone":"\u2705","Android":"\u274c","Explanation":"Apple assistant not on Android."},{"#":18,"Feature":"Google Assistant","Category":"Voice Assistant","iPhone":"\u26a0\ufe0f","Android":"\u2705","Explanation":"Available on iPhone via app (less integrated); native and deeper on Android."},{"#":19,"Feature":"App Clips \/ Instant Apps","Category":"Productivity","iPhone":"\u2705","Android":"\u26a0\ufe0f","Explanation":"Android has Instant Apps but discovery\/behavior differences exist."},{"#":20,"Feature":"Built-in screen recording","Category":"Productivity","iPhone":"\u2705","Android":"\u2705","Explanation":"Both platforms include; Android had historical OEM variation but now common."},{"#":21,"Feature":"iCloud backup","Category":"Backup & Sync","iPhone":"\u2705","Android":"\u274c","Explanation":"iOS cloud backup doesn\u2019t transfer; Android uses Google or OEM backups."},{"#":22,"Feature":"Google backup (contacts\/settings\/apps)","Category":"Backup & Sync","iPhone":"\u26a0\ufe0f","Android":"\u2705","Explanation":"Limited on iPhone; native & broader on Android."},{"#":23,"Feature":"Find My (Apple)","Category":"Location & Tracking","iPhone":"\u2705","Android":"\u274c","Explanation":"Android has Find My Device, separate ecosystem."},{"#":24,"Feature":"End-to-end encrypted native messaging","Category":"Security","iPhone":"\u2705","Android":"\u274c","Explanation":"iMessage encryption lost."},{"#":25,"Feature":"Shared iCloud photo albums","Category":"Media & Sharing","iPhone":"\u2705","Android":"\u26a0\ufe0f","Explanation":"Google Photos similar but cross-platform gap with Apple users."},{"#":26,"Feature":"Live Text \/ OCR in photos","Category":"Productivity","iPhone":"\u2705","Android":"\u2705","Explanation":"Equivalent via Google Lens on Android."},{"#":27,"Feature":"Visual Lookup \/ object recognition","Category":"Productivity","iPhone":"\u2705","Android":"\u2705","Explanation":"Android has similar capabilities (Google)."},{"#":28,"Feature":"App privacy labels","Category":"Privacy","iPhone":"\u2705","Android":"\u26a0\ufe0f","Explanation":"Play Store\u2019s disclosures are less uniform."},{"#":29,"Feature":"Granular app permission prompts","Category":"Privacy","iPhone":"\u2705","Android":"\u2705","Explanation":"Both give controls; Android often more granular."},{"#":30,"Feature":"Hardware-backed key storage (Secure Enclave \/ TEE)","Category":"Security","iPhone":"\u2705","Android":"\u2705","Explanation":"Both platforms have secure elements."},{"#":31,"Feature":"OS update cadence & control","Category":"Updates","iPhone":"\u2705","Android":"\u26a0\ufe0f","Explanation":"iOS is uniform; Android depends on OEM (Pixel is closest)."},{"#":32,"Feature":"Long-term OS support guarantee","Category":"Updates","iPhone":"\u2705","Android":"\u26a0\ufe0f","Explanation":"Apple covers many years; only some Android flagships match."},{"#":33,"Feature":"Family Sharing (apps\/purchases)","Category":"Ecosystem","iPhone":"\u2705","Android":"\u26a0\ufe0f","Explanation":"Google Family Library exists but less integrated."},{"#":34,"Feature":"Bundled subscription tiers (Apple One)","Category":"Ecosystem","iPhone":"\u2705","Android":"\u274c","Explanation":"No direct cross-service bundling on Android."},{"#":35,"Feature":"AirPlay (output to Apple TV \/ speakers)","Category":"Media Casting","iPhone":"\u2705","Android":"\u274c","Explanation":"Android uses Chromecast\/Miracast; incompatible with AirPlay targets."},{"#":36,"Feature":"Chromecast support","Category":"Media Casting","iPhone":"\u26a0\ufe0f","Android":"\u2705","Explanation":"Native on Android; iOS needs app integration."},{"#":37,"Feature":"Wi-Fi calling (carrier)","Category":"Connectivity","iPhone":"\u2705","Android":"\u2705","Explanation":"Supported on both, carrier-dependent."},{"#":38,"Feature":"Visual voicemail transcription","Category":"Productivity","iPhone":"\u2705","Android":"\u26a0\ufe0f","Explanation":"Android support varies by carrier\/device."},{"#":39,"Feature":"Emergency SOS shortcut","Category":"Safety","iPhone":"\u2705","Android":"\u2705","Explanation":"Both have hardware-triggered emergency features."},{"#":40,"Feature":"Medical ID on lock screen","Category":"Health & Safety","iPhone":"\u2705","Android":"\u26a0\ufe0f","Explanation":"Android has equivalents but differing interfaces."},{"#":41,"Feature":"Apple Wallet & passes","Category":"Payments","iPhone":"\u2705","Android":"\u274c","Explanation":"Google Wallet exists but not interoperable."},{"#":42,"Feature":"NFC tap-to-pay","Category":"Payments","iPhone":"\u2705","Android":"\u2705","Explanation":"Supported on both (varies by region\/device)."},{"#":43,"Feature":"Transit card integration in wallet","Category":"Mobility","iPhone":"\u2705","Android":"\u26a0\ufe0f","Explanation":"Available on Android but regional\/implementation differences."},{"#":44,"Feature":"Biometric-secured mobile payments","Category":"Security","iPhone":"\u2705","Android":"\u2705","Explanation":"Both support."},{"#":45,"Feature":"AirTags \/ Find My accessory network","Category":"Location & Tracking","iPhone":"\u2705","Android":"\u274c","Explanation":"Android can't tap into Apple\u2019s Find My network."},{"#":46,"Feature":"U1 chip spatial features (precision finding)","Category":"Hardware","iPhone":"\u2705","Android":"\u274c","Explanation":"No equivalent integrated spatial ecosystem on Android broadly."},{"#":47,"Feature":"System keyboard & emoji","Category":"UX","iPhone":"\u2705","Android":"\u2705","Explanation":"Both have rich keyboards; Android more swappable."},{"#":48,"Feature":"Quick Settings customization","Category":"UI\/UX","iPhone":"\u274c","Android":"\u2705","Explanation":"Android allows rearranging\/enabling tiles freely."},{"#":49,"Feature":"Screen Time \/ Digital Wellbeing","Category":"Productivity","iPhone":"\u2705","Android":"\u2705","Explanation":"Both platforms track usage; interface differences."},{"#":50,"Feature":"Focus modes \/ scheduled Do Not Disturb","Category":"Productivity","iPhone":"\u2705","Android":"\u2705","Explanation":"Analogous features exist on Android."},{"#":51,"Feature":"Apple Watch pairing","Category":"Accessories","iPhone":"\u2705","Android":"\u274c","Explanation":"Apple Watch only works with iPhone."},{"#":52,"Feature":"Third-party smartwatch breadth","Category":"Accessories","iPhone":"\u274c","Android":"\u2705","Explanation":"Android pairs with many brands."},{"#":53,"Feature":"AirPods full spatial audio\/head tracking","Category":"Audio","iPhone":"\u2705","Android":"\u26a0\ufe0f","Explanation":"Partial functionality on Android; lacks seamless integration."},{"#":54,"Feature":"AirPods automatic device switching","Category":"Audio","iPhone":"\u2705","Android":"\u274c","Explanation":"Feature is Apple ecosystem specific."},{"#":55,"Feature":"iCloud Drive file sync","Category":"Backup & Sync","iPhone":"\u2705","Android":"\u274c","Explanation":"Need Google Drive or equivalents on Android."},{"#":56,"Feature":"Native Notes app with sync","Category":"Productivity","iPhone":"\u2705","Android":"\u274c","Explanation":"Must migrate or use third-party."},{"#":57,"Feature":"Safari tab\/reading list sync","Category":"Browsing","iPhone":"\u2705","Android":"\u274c","Explanation":"Chrome\/others are separate ecosystems."},{"#":58,"Feature":"Apple News feed personalization","Category":"Media","iPhone":"\u2705","Android":"\u274c","Explanation":"Google News differs; no direct port."},{"#":59,"Feature":"Lock screen widgets (iOS 16+)","Category":"UI\/UX","iPhone":"\u2705","Android":"\u26a0\ufe0f","Explanation":"Android offers more options but varies by OEM."},{"#":60,"Feature":"Wallpaper depth \/ dynamic effects","Category":"UI\/UX","iPhone":"\u2705","Android":"\u26a0\ufe0f","Explanation":"Android has similar but different implementations."},{"#":61,"Feature":"App Library auto-organization","Category":"UX","iPhone":"\u2705","Android":"\u26a0\ufe0f","Explanation":"Android has app drawer; conceptually similar but layout differs."},{"#":62,"Feature":"Live Activities (dynamic live info)","Category":"Productivity","iPhone":"\u2705","Android":"\u26a0\ufe0f","Explanation":"Android equivalents exist but less standardized."},{"#":63,"Feature":"Built-in webpage translation","Category":"Browsing","iPhone":"\u2705","Android":"\u2705","Explanation":"Chrome\/Google services mirror feature on Android."},{"#":64,"Feature":"Biometric autofill password unlocking","Category":"Security","iPhone":"\u2705","Android":"\u2705","Explanation":"Comparable on both."},{"#":65,"Feature":"iCloud Keychain cross-device password sync","Category":"Security","iPhone":"\u2705","Android":"\u274c","Explanation":"Requires third-party or Google Password Manager separately."},{"#":66,"Feature":"Secure Wi-Fi password sharing","Category":"Convenience","iPhone":"\u2705","Android":"\u2705","Explanation":"Android uses QR\/Nearby mechanisms."},{"#":67,"Feature":"iOS-exclusive apps\/games","Category":"Apps & Stores","iPhone":"\u2705","Android":"\u274c","Explanation":"Some titles remain iOS-only."},{"#":68,"Feature":"Cross-platform feature parity (app behavior differences)","Category":"Apps & Stores","iPhone":"\u26a0\ufe0f","Android":"\u26a0\ufe0f","Explanation":"Many apps exist but may diverge in features."},{"#":69,"Feature":"Built-in keyboard swapping restriction","Category":"Customization","iPhone":"\u2705","Android":"\u26a0\ufe0f","Explanation":"iOS is locked to allowed keyboards; Android freely swaps."},{"#":70,"Feature":"3D Touch \/ pressure UI cues (legacy)","Category":"Interaction","iPhone":"\u26a0\ufe0f","Android":"\u2705","Explanation":"Android uses long-press equivalents; implementation differs."},{"#":71,"Feature":"CarPlay","Category":"Automotive","iPhone":"\u2705","Android":"\u274c","Explanation":"Replaced by Android Auto on Android."},{"#":72,"Feature":"Android Auto access","Category":"Automotive","iPhone":"\u274c","Android":"\u2705","Explanation":"Native on Android; limited on iPhone."},{"#":73,"Feature":"Siri Shortcuts automation","Category":"Automation","iPhone":"\u2705","Android":"\u26a0\ufe0f","Explanation":"Android has routines\/Tasker equivalents but is more fragmented."},{"#":74,"Feature":"Consistent shortcut scripting","Category":"Automation","iPhone":"\u2705","Android":"\u26a0\ufe0f","Explanation":"Android options vary across apps\/devices."},{"#":75,"Feature":"App privacy report (tracking transparency)","Category":"Privacy","iPhone":"\u2705","Android":"\u2705","Explanation":"Both expose some tracking data."},{"#":76,"Feature":"Multi-user profiles (tablet)","Category":"User Management","iPhone":"\u274c","Android":"\u2705","Explanation":"Android supports separate users."},{"#":77,"Feature":"Guest mode \/ secondary profiles","Category":"User Management","iPhone":"\u274c","Android":"\u2705","Explanation":"Android has guest sessions; iOS lacks."},{"#":78,"Feature":"Open file system access","Category":"File Management","iPhone":"\u274c","Android":"\u2705","Explanation":"Android allows broader direct file manipulation."},{"#":79,"Feature":"Sandboxed apps","Category":"Security","iPhone":"\u2705","Android":"\u2705","Explanation":"Both enforce isolation."},{"#":80,"Feature":"Rooting \/ custom ROM ability","Category":"Power User","iPhone":"\u274c","Android":"\u2705","Explanation":"Android allows deeper modification at cost of warranty\/security."},{"#":81,"Feature":"Voice memos \/ quick audio notes","Category":"Productivity","iPhone":"\u2705","Android":"\u2705","Explanation":"Both have equivalents (e.g., Google Recorder)."},{"#":82,"Feature":"Live voicemail transcription","Category":"Productivity","iPhone":"\u2705","Android":"\u26a0\ufe0f","Explanation":"Android depends on carrier\/device."},{"#":83,"Feature":"Built-in QR scanning via camera","Category":"Convenience","iPhone":"\u2705","Android":"\u2705","Explanation":"Both now support natively."},{"#":84,"Feature":"Lock screen quick shortcuts (wallet, camera)","Category":"UX","iPhone":"\u2705","Android":"\u2705","Explanation":"Both provide fast actions."},{"#":85,"Feature":"Spatial audio system integration","Category":"Audio","iPhone":"\u2705","Android":"\u26a0\ufe0f","Explanation":"Fragmented on Android; available on some devices."},{"#":86,"Feature":"Crash detection \/ emergency location","Category":"Safety","iPhone":"\u2705","Android":"\u2705","Explanation":"Available on both (implementation differs)."},{"#":87,"Feature":"Seamless accessory pairing (Apple-style)","Category":"Convenience","iPhone":"\u2705","Android":"\u274c","Explanation":"Android pairing less unified unless same brand."},{"#":88,"Feature":"Offline \u201cFind My\u201d network for lost devices","Category":"Location & Tracking","iPhone":"\u2705","Android":"\u274c","Explanation":"Apple\u2019s network not accessible on Android."},{"#":89,"Feature":"Widget flexibility in multitask\/overview","Category":"UI\/UX","iPhone":"\u26a0\ufe0f","Android":"\u2705","Explanation":"Android\u2019s overview offers deeper widget embedding."},{"#":90,"Feature":"First-party email app (Mail \/ Gmail)","Category":"Productivity","iPhone":"\u2705","Android":"\u2705","Explanation":"Both have native clients."},{"#":91,"Feature":"Native HEVC video codec support","Category":"Media","iPhone":"\u2705","Android":"\u26a0\ufe0f","Explanation":"Android support varies by hardware."},{"#":92,"Feature":"Accessibility suite (VoiceOver, Dynamic Type)","Category":"Accessibility","iPhone":"\u2705","Android":"\u2705","Explanation":"Android has analogous features."},{"#":93,"Feature":"Built-in VPN configuration support","Category":"Privacy","iPhone":"\u2705","Android":"\u2705","Explanation":"Both support VPNs; Android offers more app-level control."},{"#":94,"Feature":"Uniform system UI across all devices","Category":"UX","iPhone":"\u2705","Android":"\u274c","Explanation":"Android OEM skins cause fragmentation."},{"#":95,"Feature":"Consistent performance\/boot optimization","Category":"Performance","iPhone":"\u2705","Android":"\u26a0\ufe0f","Explanation":"Android varies; premium achieves parity."},{"#":96,"Feature":"Mac ecosystem integration (Handoff, AirDrop to Mac)","Category":"Ecosystem","iPhone":"\u2705","Android":"\u274c","Explanation":"Lost unless third-party bridges used."},{"#":97,"Feature":"iCloud Photo Library \/ Live Photos","Category":"Media","iPhone":"\u2705","Android":"\u274c","Explanation":"No native equivalent; Live Photos behave differently."},{"#":98,"Feature":"Consistent widget styling","Category":"UI\/UX","iPhone":"\u2705","Android":"\u26a0\ufe0f","Explanation":"Android widgets vary widely."},{"#":99,"Feature":"Seamless iOS-to-iOS app data restore","Category":"Backup & Sync","iPhone":"\u2705","Android":"\u274c","Explanation":"Android migration from iOS requires tools."},{"#":100,"Feature":"Centralized trade-in \/ upgrade program","Category":"Upgrade Path","iPhone":"\u2705","Android":"\u26a0\ufe0f","Explanation":"Android OEMs offer programs, but less centralized."},{"#":101,"Feature":"Split-screen multitasking","Category":"Productivity","iPhone":"\u274c","Android":"\u2705","Explanation":"Android supports true split-screen; iPhone limited to Stage Manager (iPad) or recent multitask."},{"#":102,"Feature":"Picture-in-picture for video","Category":"Media","iPhone":"\u2705","Android":"\u2705","Explanation":"Both support, with differing UI."},{"#":103,"Feature":"App cloning \/ dual instances","Category":"Productivity","iPhone":"\u274c","Android":"\u2705","Explanation":"Some Androids allow multiple instances of same app."},{"#":104,"Feature":"Side-loading apps (APK installation)","Category":"Apps & Stores","iPhone":"\u274c","Android":"\u2705","Explanation":"Android allows installing outside official store (with security caveats)."},{"#":105,"Feature":"Changing default browser\/search engine","Category":"Customization","iPhone":"\u274c","Android":"\u2705","Explanation":"Android freely lets you swap."},{"#":106,"Feature":"System-wide translation overlay","Category":"Productivity","iPhone":"\u274c","Android":"\u2705","Explanation":"Android (via Google Translate\/Lens) offers in-line translation more broadly."},{"#":107,"Feature":"NFC reader modes (e.g., card emulation)","Category":"Connectivity","iPhone":"\u26a0\ufe0f","Android":"\u2705","Explanation":"Android often exposes more NFC capabilities; iPhone is restricted."},{"#":108,"Feature":"eSIM support management","Category":"Connectivity","iPhone":"\u2705","Android":"\u2705","Explanation":"Both now support eSIM; Android UI varies by OEM."},{"#":109,"Feature":"Expandable storage (microSD)","Category":"Hardware","iPhone":"\u274c","Android":"\u2705","Explanation":"Rare on iPhone; some Androids have slots."},{"#":110,"Feature":"USB-C universal port","Category":"Hardware","iPhone":"\u274c","Android":"\u2705","Explanation":"iPhone uses Lightning (transitioning); Android standardizes on USB-C."},{"#":111,"Feature":"Repairability \/ third-party repairs","Category":"Hardware","iPhone":"\u26a0\ufe0f","Android":"\u2705","Explanation":"iPhone is more locked down; Android devices often easier to repair (varies by brand)."},{"#":112,"Feature":"Wireless charging (Qi)","Category":"Hardware","iPhone":"\u2705","Android":"\u2705","Explanation":"Supported on many of both, but standardization differs."},{"#":113,"Feature":"Reverse wireless charging","Category":"Hardware","iPhone":"\u274c","Android":"\u2705","Explanation":"More common on Android flagships."},{"#":114,"Feature":"Water\/dust resistance rating consistency","Category":"Hardware","iPhone":"\u2705","Android":"\u26a0\ufe0f","Explanation":"iPhone consistently rated; Android varies by model."},{"#":115,"Feature":"Preinstalled OEM bloatware","Category":"Software Experience","iPhone":"\u274c","Android":"\u26a0\ufe0f","Explanation":"iPhone is cleaner; many Androids come with extra apps."},{"#":116,"Feature":"DLNA \/ local media streaming","Category":"Media","iPhone":"\u26a0\ufe0f","Android":"\u2705","Explanation":"Android often has native\/local streaming apps; iOS limited without third-party."},{"#":117,"Feature":"Developer options \/ ADB access","Category":"Power User","iPhone":"\u274c","Android":"\u2705","Explanation":"Android exposes deep dev controls."},{"#":118,"Feature":"Bootloader unlocking","Category":"Power User","iPhone":"\u274c","Android":"\u2705","Explanation":"Possible on many Androids (voids warranty); impossible on iPhone."},{"#":119,"Feature":"System theming (icon packs, fonts)","Category":"Customization","iPhone":"\u274c","Android":"\u2705","Explanation":"Android allows broad theming."},{"#":120,"Feature":"Scheduled dark\/light mode","Category":"UI\/UX","iPhone":"\u2705","Android":"\u2705","Explanation":"Both can schedule modes (Android generally more customizable)."},{"#":121,"Feature":"Adaptive battery \/ AI power management","Category":"Performance","iPhone":"\u2705","Android":"\u2705","Explanation":"Both have intelligent battery features (Android often more explicit)."},{"#":122,"Feature":"Notification channels \/ granular control","Category":"Notifications","iPhone":"\u274c","Android":"\u2705","Explanation":"Android gives per-type control; iOS has summary but less granular historically."},{"#":123,"Feature":"Notification summary \/ focus-delivered digests","Category":"Notifications","iPhone":"\u2705","Android":"\u26a0\ufe0f","Explanation":"iOS has summary; Android offers variants via apps."},{"#":124,"Feature":"Global undo (shake to undo style)","Category":"Interaction","iPhone":"\u2705","Android":"\u26a0\ufe0f","Explanation":"Android uses different gestures\/tools; not uniform."},{"#":125,"Feature":"Exposure notifications (public health APIs)","Category":"Privacy\/Health","iPhone":"\u2705","Android":"\u2705","Explanation":"Both supported when active (depends on policy)."},{"#":126,"Feature":"Multi-SIM UI management","Category":"Connectivity","iPhone":"\u2705","Android":"\u2705","Explanation":"Both now handle dual SIM (iPhone via eSIM+physical; Android often has dual trays)."},{"#":127,"Feature":"Rich lock screen shortcuts (widgets, media)","Category":"UX","iPhone":"\u2705","Android":"\u2705","Explanation":"Both offer, but style\/interaction differ."},{"#":128,"Feature":"Cross-device audio handoff (e.g., AirPods between Apple gear)","Category":"Audio","iPhone":"\u2705","Android":"\u274c","Explanation":"Android lacks seamless switching across dissimilar devices unless same brand ecosystem."},{"#":129,"Feature":"Backup of Health data across devices","Category":"Health","iPhone":"\u2705","Android":"\u274c","Explanation":"Apple Health sync doesn\u2019t port; Android requires third-party solutions."},{"#":130,"Feature":"Intent-based inter-app communication","Category":"Productivity","iPhone":"\u274c","Android":"\u2705","Explanation":"Android\u2019s intent system enables richer app-to-app actions."}];
+    function renderTable(filterCategory, searchQuery) {
+      const tbody = document.getElementById("comparison-body");
+      tbody.innerHTML = "";
+      const query = (searchQuery||"").trim().toLowerCase();
+      comparisonData.forEach(row => {
+        if (filterCategory && row.Category !== filterCategory) return;
+        if (query) {
+          const inFeature = row.Feature.toLowerCase().includes(query);
+          const inExplanation = row.Explanation.toLowerCase().includes(query);
+          if (!inFeature && !inExplanation) return;
+        }
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${row.Feature}</td>
+          <td class="center">${row.iPhone}</td>
+          <td class="center">${row.Android}</td>
+          <td>${row.Explanation}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+    // initial render
+    renderTable("", "");
+    // filters
+    const categorySelect = document.getElementById("category-filter");
+    const searchBox = document.getElementById("search-box");
+    const clearBtn = document.getElementById("clear-filters");
+    function applyFilters() {
+      renderTable(categorySelect.value, searchBox.value);
+    }
+    categorySelect.addEventListener("change", applyFilters);
+    searchBox.addEventListener("input", applyFilters);
+    clearBtn.addEventListener("click", () => {
+      categorySelect.value = "";
+      searchBox.value = "";
+      renderTable("", "");
+    });
+
+    // local count display
+    document.getElementById('local-count').textContent = localStorage.getItem('simple_pageview_count') || '0';
+
+    // Suggestion modal logic
+    const suggestBtn = document.getElementById('suggest-btn');
+    const modal = document.getElementById('suggestion-modal');
+    const closeModal = document.getElementById('close-modal');
+    const submitBtn = document.getElementById('submit-suggestion');
+    const feedback = document.getElementById('suggestion-feedback');
+    const categorySelectModal = document.getElementById('suggest-category');
+    // populate categories
+    const categories = Array.from(new Set(comparisonData.map(r => r.Category).filter(c => c)));
+    categories.sort();
+    categories.forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = c;
+      opt.textContent = c;
+      categorySelectModal.appendChild(opt);
+    });
+    function openModal() {
+      modal.style.display = 'flex';
+      modal.setAttribute('aria-hidden','false');
+      document.body.style.overflow='hidden';
+    }
+    function close() {
+      modal.style.display='none';
+      modal.setAttribute('aria-hidden','true');
+      document.body.style.overflow='';
+      feedback.textContent='';
+    }
+    suggestBtn.addEventListener('click', openModal);
+    closeModal.addEventListener('click', close);
+    submitBtn.addEventListener('click', () => {
+      const feature = document.getElementById('suggest-feature').value.trim();
+      const desc = document.getElementById('suggest-desc').value.trim();
+      const category = document.getElementById('suggest-category').value;
+      if (!feature) {
+        feedback.textContent='Please provide a feature name.';
+        return;
+      }
+      if (!desc) {
+        feedback.textContent='Please provide a description.';
+        return;
+      }
+      const subject = encodeURIComponent('Suggestion: ' + feature);
+      let body = '';
+      body += 'Feature: ' + feature + '\n';
+      if (category) body += 'Category: ' + category + '\n';
+      body += 'Description: ' + desc + '\n';
+      body += 'Page URL: ' + window.location.href + '\n';
+      body += 'User Agent: ' + navigator.userAgent + '\n';
+      const mailtoLink = 'mailto:noreply@shouldiswitch.com?subject=' + subject + '&body=' + encodeURIComponent(body);
+      window.location.href = mailtoLink;
+      feedback.textContent = 'If your email client did not open, please copy this and email manually: noreply@shouldiswitch.com';
+    });
+  </script>
+  <div style="display:none;"></div>
+</body>
+</html>
