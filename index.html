@@ -63,58 +63,48 @@
       vertical-align: top;
       font-size: 0.9rem;
       text-align: left;
-    }
-    th, td {
       position: relative;
     }
-    /* Hide # column always */
-    th:first-child,
-    td:first-child {
+    /* Hide the '#' column */
+    th[data-label="#"],
+    td[data-label="#"] {
       display: none;
     }
-    /* Hide Explanation column on mobile */
+    th { position: sticky; top: 0; }
+    tr:nth-child(even) { background: #f9f9fb; }
+
+    /* Toggle cell hidden on desktop */
+    .toggle-cell { display: none; }
+
+    /* Hide Explanation column on main row for mobile */
     @media (max-width: 900px) {
       th[data-label="Explanation"],
       td[data-label="Explanation"] {
         display: none;
       }
-    }
-    th {
-      position: sticky;
-      top: 0;
-    }
-    tr:nth-child(even) {
-      background: #f9f9fb;
-    }
-    /* Extra row for explanation on mobile */
-    .exp-row {
-      display: none;
-    }
-    @media (max-width: 900px) {
-      .exp-row {
-        display: table-row;
-        background: #fff;
+      /* Show toggle cell in main row */
+      #comparison-table .toggle-cell {
+        display: table-cell !important;
+        width: 1.5rem;
       }
-      .exp-cell {
-        padding: 0.75rem;
-        border: 1px solid #e2e8f0;
-        font-size: 0.9rem;
-      }
-      .exp-toggle {
-        display: inline-block;
-        padding: 0.4rem 0.8rem;
-        font-size: 0.85rem;
-        border: 1px solid #cbd5e1;
-        border-radius: 4px;
-        background: #fff;
+      #comparison-table .toggle-cell .exp-toggle {
+        background: none;
+        border: none;
+        font-size: 1rem;
         cursor: pointer;
-        margin: 0.5rem;
+        padding: 0;
+        margin: 0;
+        line-height: 1;
       }
-      .exp-content {
-        display: none;
-        margin: 0.5rem;
-        color: #333;
-      }
+    }
+
+    /* Explanation row hidden by default */
+    .exp-row { display: none; }
+    /* Styles for explanation row when visible */
+    .exp-cell {
+      padding: 0.75rem;
+      border: 1px solid #e2e8f0;
+      font-size: 0.9rem;
     }
   </style>
 </head>
@@ -125,14 +115,10 @@
       Switching between iphone and android can be a stressful decision. Here we broke it down by category with explanations for each area that you should keep in mind when considering a switch!
     </p>
     <div class="controls">
-      <label>
-        Category:
-        <select id="category-filter">
-          <option value="">All Categories</option>
-        </select>
+      <label>Category:
+        <select id="category-filter"><option value="">All Categories</option></select>
       </label>
-      <label>
-        Search:
+      <label>Search:
         <input type="text" id="search-box" placeholder="Search..." />
       </label>
     </div>
@@ -143,157 +129,100 @@
         <tbody id="table-body"></tbody>
       </table>
     </div>
-    <p class="small">
-      Data source: comparison.csv at specific commit.
-    </p>
+    <p class="small">Data source: comparison.csv at specific commit.</p>
   </div>
-
   <script>
     let allRows = [];
-
     async function fetchAndRender() {
-      const statusEl = document.getElementById('status');
-      const rawUrl = 'https://raw.githubusercontent.com/itsjoelscott/do-i-switch/1296845b511408abc7c76d6bc564f2e0db90577d/comparison.csv';
       try {
-        const res = await fetch(rawUrl);
+        const res = await fetch('https://raw.githubusercontent.com/itsjoelscott/do-i-switch/1296845b511408abc7c76d6bc564f2e0db90577d/comparison.csv');
         if (!res.ok) throw new Error(res.statusText);
         const text = await res.text();
         const rows = parseCSV(text);
-        if (!rows.length) {
-          statusEl.textContent = 'CSV is empty or malformed.';
-          return;
-        }
+        if (!rows.length) return;
         allRows = rows;
         buildTable(rows);
         populateCategoryFilter(rows);
-        statusEl.textContent = '';
+        document.getElementById('status').textContent = '';
       } catch (e) {
-        statusEl.textContent = 'Error loading table: ' + e.message;
-        console.error(e);
+        document.getElementById('status').textContent = 'Error loading table: ' + e.message;
       }
     }
-
     function parseCSV(text) {
       const rows = [];
-      let i = 0, len = text.length;
-      let current = '', row = [], inQuotes = false;
-      while (i < len) {
-        const char = text[i];
-        if (inQuotes) {
-          if (char === '"') {
-            if (i + 1 < len && text[i + 1] === '"') { current += '"'; i += 2; continue; }
-            inQuotes = false;
-            i++;
-          } else { current += char; i++; }
+      let i=0, len=text.length, cur='', row=[], inQ=false;
+      while (i<len) {
+        const ch = text[i];
+        if (inQ) {
+          if (ch === '"') {
+            if (i+1<len && text[i+1]==='"') { cur += '"'; i += 2; continue; }
+            inQ = false; i++;
+          } else { cur += ch; i++; }
         } else {
-          if (char === '"') { inQuotes = true; i++; }
-          else if (char === ',') { row.push(current); current = ''; i++; }
-          else if (char === '\r') { i++; }
-          else if (char === '\n') { row.push(current); rows.push(row); row = []; current = ''; i++; }
-          else { current += char; i++; }
+          if (ch === '"') { inQ = true; i++; }
+          else if (ch === ',') { row.push(cur); cur = ''; i++; }
+          else if (ch === '\r') { i++; }
+          else if (ch === '\n') { row.push(cur); rows.push(row); row = []; cur = ''; i++; }
+          else { cur += ch; i++; }
         }
       }
-      if (current !== '' || text.endsWith(',')) row.push(current);
+      if (cur !== '' || text.endsWith(',')) row.push(cur);
       if (row.length) rows.push(row);
       return rows;
     }
-
     function buildTable(rows) {
-      const thead = document.getElementById('table-head');
-      const tbody = document.getElementById('table-body');
+      const thead = document.getElementById('table-head'), tbody = document.getElementById('table-body');
       thead.innerHTML = '';
       tbody.innerHTML = '';
-      const headers = rows[0];
-      const expIdx = headers.indexOf('Explanation');
-
-      // header
-      const headerRow = document.createElement('tr');
-      headers.forEach(text => {
-        const th = document.createElement('th');
-        th.textContent = text;
-        th.setAttribute('data-label', text);
-        headerRow.appendChild(th);
-      });
-      thead.appendChild(headerRow);
-
-      // rows
-      rows.slice(1).forEach((row, rIdx) => {
+      const headers = rows[0], expIdx = headers.indexOf('Explanation');
+      // Header row
+      const hr = document.createElement('tr');
+      const thToggle = document.createElement('th'); thToggle.className = 'toggle-cell'; hr.appendChild(thToggle);
+      headers.forEach(h => { const th = document.createElement('th'); th.textContent = h; th.setAttribute('data-label', h); hr.appendChild(th); });
+      thead.appendChild(hr);
+      // Data rows
+      rows.slice(1).forEach(row => {
         const tr = document.createElement('tr');
-        row.forEach((cell, idx) => {
-          const td = document.createElement('td');
-          td.textContent = cell;
-          td.setAttribute('data-label', headers[idx]);
-          tr.appendChild(td);
-        });
+        // toggle cell
+        const tc = document.createElement('td'); tc.className = 'toggle-cell';
+        const btn = document.createElement('button'); btn.className = 'exp-toggle'; btn.textContent = '▶'; tc.appendChild(btn);
+        tr.appendChild(tc);
+        // data cells
+        row.forEach((c,i) => { const td = document.createElement('td'); td.textContent = c; td.setAttribute('data-label', headers[i]); tr.appendChild(td); });
         tbody.appendChild(tr);
-
-        // extra explanation row for mobile
-        const expRow = document.createElement('tr');
-        expRow.className = 'exp-row';
-        const expCell = document.createElement('td');
-        expCell.className = 'exp-cell';
-        expCell.colSpan = headers.length;
-        const btn = document.createElement('button');
-        btn.className = 'exp-toggle';
-        btn.textContent = 'Show more';
-        const div = document.createElement('div');
-        div.className = 'exp-content';
-        div.textContent = row[expIdx] || '';
-        expCell.appendChild(btn);
-        expCell.appendChild(div);
-        expRow.appendChild(expCell);
-        tbody.appendChild(expRow);
+        // explanation row
+        const er = document.createElement('tr'); er.className = 'exp-row';
+        const ec = document.createElement('td'); ec.className = 'exp-cell'; ec.colSpan = headers.length+1; ec.textContent = row[expIdx] || '';
+        er.appendChild(ec);
+        tbody.appendChild(er);
       });
-
       document.getElementById('comparison-table').hidden = false;
     }
-
     function populateCategoryFilter(rows) {
-      const select = document.getElementById('category-filter');
-      const headers = rows[0];
-      const idx = headers.indexOf('Category');
-      if (idx < 0) return;
-      const categories = new Set(rows.slice(1).map(r => r[idx]));
-      categories.forEach(cat => {
-        const opt = document.createElement('option');
-        opt.value = cat;
-        opt.textContent = cat;
-        select.appendChild(opt);
-      });
-      select.addEventListener('change', filterTable);
-      document.getElementById('search-box').addEventListener('input', filterTable);
+      const sel = document.getElementById('category-filter'), idx = rows[0].indexOf('Category');
+      if (idx<0) return;
+      new Set(rows.slice(1).map(r=>r[idx])).forEach(cat=>{ const o=document.createElement('option'); o.value=cat; o.textContent=cat; sel.appendChild(o); });
+      sel.addEventListener('change', filterTable); document.getElementById('search-box').addEventListener('input', filterTable);
     }
-
     function filterTable() {
-      const select = document.getElementById('category-filter');
-      const query = document.getElementById('search-box').value.toLowerCase();
-      const table = document.getElementById('comparison-table');
-      const rows = Array.from(table.tBodies[0].rows);
-      const headers = Array.from(table.tHead.rows[0].cells).map(th => th.textContent);
+      const selVal = document.getElementById('category-filter').value.toLowerCase();
+      const q = document.getElementById('search-box').value.toLowerCase();
+      const rows = Array.from(document.getElementById('comparison-table').tBodies[0].rows);
+      const headers = Array.from(document.querySelectorAll('#comparison-table thead th')).map(th=>th.textContent);
       const catIdx = headers.indexOf('Category');
-
-      for (let i = 0; i < rows.length; i += 2) {
-        const row = rows[i];
-        const expRow = rows[i+1];
-        const cells = Array.from(row.cells).map(td => td.textContent.toLowerCase());
-        const matchesCategory = !select.value || cells[catIdx] === select.value.toLowerCase();
-        const matchesSearch = !query || cells.some(c => c.includes(query));
-        const show = matchesCategory && matchesSearch;
-        row.style.display = show ? '' : 'none';
-        expRow.style.display = show ? 'table-row' : 'none';
+      for (let i=0;i<rows.length;i+=2) {
+        const r=rows[i], er=rows[i+1];
+        const cells=Array.from(r.cells).map(td=>td.textContent.toLowerCase());
+        const show=(!selVal||cells[catIdx]===selVal)&&(!q||cells.some(c=>c.includes(q)));
+        r.style.display=show?'':'none'; er.style.display='none';
       }
     }
-
-    // toggle explanation
-    document.addEventListener('click', function(e) {
-      if (e.target.classList.contains('exp-toggle')) {
-        const content = e.target.nextElementSibling;
-        const visible = content.style.display === 'block';
-        content.style.display = visible ? 'none' : 'block';
-        e.target.textContent = visible ? 'Show more' : 'Show less';
+    document.addEventListener('click',e=>{
+      if(e.target.classList.contains('exp-toggle')){
+        const btn=e.target; const tr=btn.closest('tr'); const er=tr.nextElementSibling;
+        const open=er.style.display==='table-row'; er.style.display=open?'none':'table-row'; btn.textContent=open?'▶':'▼';
       }
     });
-
     fetchAndRender();
   </script>
 </body>
