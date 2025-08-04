@@ -73,7 +73,6 @@
     th[data-label="iPhone"],
     th[data-label="Android"] {
       text-align: center;
-      /* Adjust width for readability */
       min-width: 4rem;
       padding-left: 1rem;
       padding-right: 1rem;
@@ -89,13 +88,14 @@
     /* Toggle cell hidden on desktop */
     .toggle-cell { display: none; }
 
-    /* Hide Explanation column on main row for mobile */
+    /* Mobile-specific styles */
     @media (max-width: 900px) {
+      /* Hide Explanation column in main row */
       th[data-label="Explanation"],
       td[data-label="Explanation"] {
         display: none;
       }
-      /* Show toggle cell in main row */
+      /* Show toggle cell */
       #comparison-table .toggle-cell {
         display: table-cell !important;
         width: 1.2rem;
@@ -109,14 +109,29 @@
         margin: 0;
         line-height: 1;
       }
+      /* Smaller text and padding */
       th, td {
         padding: 0.4rem;
         font-size: 0.75rem;
       }
+      /* Auto-size key columns but not shrink below header width */
+      th[data-label="Category"], td[data-label="Category"],
+      th[data-label="iPhone"], td[data-label="iPhone"],
+      th[data-label="Android"], td[data-label="Android"] {
+        width: auto;
+        min-width: max-content;
+        white-space: nowrap;
+      }
+      /* Hide explanation rows by default */
+      .exp-row {
+        display: none;
+      }
     }
-    /* Explanation row hidden by default */
-    .exp-row { display: none; }
-    /* Styles for explanation row when visible */
+    /* Ensure all explanation rows are hidden by default */
+    .exp-row {
+      display: none;
+    }
+    /* Style for explanation content */
     .exp-cell {
       padding: 0.75rem;
       border: 1px solid #e2e8f0;
