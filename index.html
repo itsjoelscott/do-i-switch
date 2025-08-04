@@ -64,10 +64,20 @@
       font-size: 0.9rem;
       text-align: left;
     }
-    /* Hide the # column */
+    th, td {
+      position: relative;
+    }
+    /* Hide # column always */
     th:first-child,
     td:first-child {
       display: none;
+    }
+    /* Hide Explanation column on mobile */
+    @media (max-width: 900px) {
+      th[data-label="Explanation"],
+      td[data-label="Explanation"] {
+        display: none;
+      }
     }
     th {
       position: sticky;
@@ -76,29 +86,34 @@
     tr:nth-child(even) {
       background: #f9f9fb;
     }
-    /* Explanation toggle */
-    .exp-toggle {
+    /* Extra row for explanation on mobile */
+    .exp-row {
       display: none;
-      margin-bottom: 0.5rem;
-      padding: 0.3rem 0.6rem;
-      font-size: 0.85rem;
-      border: 1px solid #cbd5e1;
-      border-radius: 4px;
-      background: #fff;
-      cursor: pointer;
     }
-    .exp-content {
-      display: block;
-      margin: 0;
-    }
-    /* Mobile layout adjustments */
     @media (max-width: 900px) {
-      /* Show toggle button and hide content initially on mobile */
+      .exp-row {
+        display: table-row;
+        background: #fff;
+      }
+      .exp-cell {
+        padding: 0.75rem;
+        border: 1px solid #e2e8f0;
+        font-size: 0.9rem;
+      }
       .exp-toggle {
         display: inline-block;
+        padding: 0.4rem 0.8rem;
+        font-size: 0.85rem;
+        border: 1px solid #cbd5e1;
+        border-radius: 4px;
+        background: #fff;
+        cursor: pointer;
+        margin: 0.5rem;
       }
       .exp-content {
         display: none;
+        margin: 0.5rem;
+        color: #333;
       }
     }
   </style>
@@ -186,45 +201,51 @@
     function buildTable(rows) {
       const thead = document.getElementById('table-head');
       const tbody = document.getElementById('table-body');
-      const table = document.getElementById('comparison-table');
-      table.hidden = false;
       thead.innerHTML = '';
       tbody.innerHTML = '';
-
       const headers = rows[0];
       const expIdx = headers.indexOf('Explanation');
 
-      // header row
+      // header
       const headerRow = document.createElement('tr');
       headers.forEach(text => {
         const th = document.createElement('th');
         th.textContent = text;
+        th.setAttribute('data-label', text);
         headerRow.appendChild(th);
       });
       thead.appendChild(headerRow);
 
-      // body rows
-      for (let r = 1; r < rows.length; r++) {
+      // rows
+      rows.slice(1).forEach((row, rIdx) => {
         const tr = document.createElement('tr');
-        rows[r].forEach((cell, idx) => {
+        row.forEach((cell, idx) => {
           const td = document.createElement('td');
+          td.textContent = cell;
           td.setAttribute('data-label', headers[idx]);
-          if (idx === expIdx) {
-            const btn = document.createElement('button');
-            btn.textContent = 'Show';
-            btn.className = 'exp-toggle';
-            const div = document.createElement('div');
-            div.className = 'exp-content';
-            div.textContent = cell;
-            td.appendChild(btn);
-            td.appendChild(div);
-          } else {
-            td.textContent = cell;
-          }
           tr.appendChild(td);
         });
         tbody.appendChild(tr);
-      }
+
+        // extra explanation row for mobile
+        const expRow = document.createElement('tr');
+        expRow.className = 'exp-row';
+        const expCell = document.createElement('td');
+        expCell.className = 'exp-cell';
+        expCell.colSpan = headers.length;
+        const btn = document.createElement('button');
+        btn.className = 'exp-toggle';
+        btn.textContent = 'Show more';
+        const div = document.createElement('div');
+        div.className = 'exp-content';
+        div.textContent = row[expIdx] || '';
+        expCell.appendChild(btn);
+        expCell.appendChild(div);
+        expRow.appendChild(expCell);
+        tbody.appendChild(expRow);
+      });
+
+      document.getElementById('comparison-table').hidden = false;
     }
 
     function populateCategoryFilter(rows) {
@@ -247,25 +268,29 @@
       const select = document.getElementById('category-filter');
       const query = document.getElementById('search-box').value.toLowerCase();
       const table = document.getElementById('comparison-table');
-      const rows = table.tBodies[0].rows;
-      const headers = [...table.tHead.rows[0].cells].map(th => th.textContent);
+      const rows = Array.from(table.tBodies[0].rows);
+      const headers = Array.from(table.tHead.rows[0].cells).map(th => th.textContent);
       const catIdx = headers.indexOf('Category');
 
-      for (let row of rows) {
-        const cells = [...row.cells].map(td => td.textContent.toLowerCase());
+      for (let i = 0; i < rows.length; i += 2) {
+        const row = rows[i];
+        const expRow = rows[i+1];
+        const cells = Array.from(row.cells).map(td => td.textContent.toLowerCase());
         const matchesCategory = !select.value || cells[catIdx] === select.value.toLowerCase();
         const matchesSearch = !query || cells.some(c => c.includes(query));
-        row.style.display = (matchesCategory && matchesSearch) ? '' : 'none';
+        const show = matchesCategory && matchesSearch;
+        row.style.display = show ? '' : 'none';
+        expRow.style.display = show ? 'table-row' : 'none';
       }
     }
 
-    // Toggle explanation visibility on mobile
+    // toggle explanation
     document.addEventListener('click', function(e) {
       if (e.target.classList.contains('exp-toggle')) {
-        const div = e.target.nextElementSibling;
-        const isVisible = div.style.display === 'block';
-        div.style.display = isVisible ? 'none' : 'block';
-        e.target.textContent = isVisible ? 'Show' : 'Hide';
+        const content = e.target.nextElementSibling;
+        const visible = content.style.display === 'block';
+        content.style.display = visible ? 'none' : 'block';
+        e.target.textContent = visible ? 'Show more' : 'Show less';
       }
     });
 
