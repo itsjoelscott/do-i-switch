@@ -1,4 +1,4 @@
-#,Feature,Category,iPhone,Android,Explanation
+#,Feature,Category,iOS,Android,Explanation
 1,iMessage,Messaging,✅,❌,Apple’s proprietary; unavailable on Android.
 2,SMS/MMS,Messaging,✅,✅,Standard texting interoperates.
 3,RCS (rich messaging),Messaging,❌,✅,Rich communication standard native to Android.
@@ -131,3 +131,4 @@
 
 130,Intent-based inter-app communication,Productivity,❌,✅,Android’s intent system enables richer app-to-app actions.
 131,test, sample,❌,❌,details here
+
