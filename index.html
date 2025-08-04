@@ -65,6 +65,13 @@
       text-align: left;
       position: relative;
     }
+    /* Center iPhone and Android columns */
+    td[data-label="iPhone"],
+    td[data-label="Android"],
+    th[data-label="iPhone"],
+    th[data-label="Android"] {
+      text-align: center;
+    }
     /* Hide the '#' column */
     th[data-label="#"],
     td[data-label="#"] {
@@ -199,10 +206,12 @@
       document.getElementById('comparison-table').hidden = false;
     }
     function populateCategoryFilter(rows) {
-      const sel = document.getElementById('category-filter'), idx = rows[0].indexOf('Category');
+      const sel = document.getElementById('category-filter');
+      const idx = rows[0].indexOf('Category');
       if (idx<0) return;
       new Set(rows.slice(1).map(r=>r[idx])).forEach(cat=>{ const o=document.createElement('option'); o.value=cat; o.textContent=cat; sel.appendChild(o); });
-      sel.addEventListener('change', filterTable); document.getElementById('search-box').addEventListener('input', filterTable);
+      sel.addEventListener('change', filterTable);
+      document.getElementById('search-box').addEventListener('input', filterTable);
     }
     function filterTable() {
       const selVal = document.getElementById('category-filter').value.toLowerCase();
