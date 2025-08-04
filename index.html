@@ -40,12 +40,7 @@
       margin-bottom: 0.75rem;
       flex-wrap: wrap;
     }
-    .last-updated {
-      position: absolute;
-      left: 0;
-      font-size: 0.85rem;
-      color: #555;
-    }
+    
     .controls input,
     .controls select {
       padding: 0.4rem;
@@ -159,7 +154,7 @@
       Switching between iphone and android can be a stressful decision. Here we broke it down by category with explanations for each area that you should keep in mind when considering a switch!
     </p>
     <div class="controls">
-      <span id="last-updated" class="last-updated">Last Updated:</span>
+      
       <label>Category:
         <select id="category-filter"><option value="">All Categories</option></select>
       </label>
@@ -179,16 +174,7 @@
     let allRows = [];
     async function fetchAndRender() {
       const statusEl = document.getElementById('status');
-      const lastUpdatedEl = document.getElementById('last-updated');
-      const rawUrl = 'https://raw.githubusercontent.com/itsjoelscott/do-i-switch/1296845b511408abc7c76d6bc564f2e0db90577d/comparison.csv';
-      try {
-        const res = await fetch(rawUrl);
-        if (!res.ok) throw new Error(res.statusText);
-        const lastMod = res.headers.get('last-modified');
-        if (lastMod) {
-          lastUpdatedEl.textContent = 'Last Updated: ' + new Date(lastMod).toLocaleDateString();
-        }
-        const text = await res.text();
+      const text = await res.text();
         const rows = parseCSV(text);
         if (!rows.length) {
           statusEl.textContent = 'CSV is empty or malformed.';
