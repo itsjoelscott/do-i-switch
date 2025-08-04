@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Do I Switch?</title>
+  $1
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9644805660093707" crossorigin="anonymous"></script>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <style>
@@ -33,14 +33,11 @@
     }
     .controls {
       display: flex;
-      position: relative;
-      align-items: center;
-      justify-content: center;
       gap: 0.5rem;
       margin-bottom: 0.75rem;
       flex-wrap: wrap;
+      justify-content: center;
     }
-    
     .controls input,
     .controls select {
       padding: 0.4rem;
@@ -144,7 +141,6 @@
       overflow-wrap: break-word;
       box-sizing: border-box;
     }
-    .small { display: none !important; }
   </style>
 </head>
 <body>
@@ -154,7 +150,6 @@
       Switching between iphone and android can be a stressful decision. Here we broke it down by category with explanations for each area that you should keep in mind when considering a switch!
     </p>
     <div class="controls">
-      
       <label>Category:
         <select id="category-filter"><option value="">All Categories</option></select>
       </label>
@@ -169,68 +164,41 @@
         <tbody id="table-body"></tbody>
       </table>
     </div>
+    <p class="small">Data source: comparison.csv at specific commit.</p>
   </div>
   <script>
     let allRows = [];
     async function fetchAndRender() {
-      const statusEl = document.getElementById('status');
-      const text = await res.text();
+      try {
+        const res = await fetch('https://raw.githubusercontent.com/itsjoelscott/do-i-switch/1296845b511408abc7c76d6bc564f2e0db90577d/comparison.csv');
+        if (!res.ok) throw new Error(res.statusText);
+        const text = await res.text();
         const rows = parseCSV(text);
-        if (!rows.length) {
-          statusEl.textContent = 'CSV is empty or malformed.';
-          return;
-        }
+        if (!rows.length) return;
         allRows = rows;
         buildTable(rows);
         populateCategoryFilter(rows);
-        statusEl.textContent = '';
+        document.getElementById('status').textContent = '';
       } catch (e) {
-        statusEl.textContent = 'Error loading table: ' + e.message;
-        console.error(e);
+        document.getElementById('status').textContent = 'Error loading table: ' + e.message;
       }
     }
     function parseCSV(text) {
       const rows = [];
-      let i = 0,
-        len = text.length,
-        cur = '',
-        row = [],
-        inQ = false;
+      let i = 0, len = text.length, cur = '', row = [], inQ = false;
       while (i < len) {
         const ch = text[i];
         if (inQ) {
           if (ch === '"') {
-            if (i + 1 < len && text[i + 1] === '"') {
-              cur += '"';
-              i += 2;
-              continue;
-            }
-            inQ = false;
-            i++;
-          } else {
-            cur += ch;
-            i++;
-          }
+            if (i + 1 < len && text[i+1] === '"') { cur += '"'; i += 2; continue; }
+            inQ = false; i++;
+          } else { cur += ch; i++; }
         } else {
-          if (ch === '"') {
-            inQ = true;
-            i++;
-          } else if (ch === ',') {
-            row.push(cur);
-            cur = '';
-            i++;
-          } else if (ch === '\r') {
-            i++;
-          } else if (ch === '\n') {
-            row.push(cur);
-            rows.push(row);
-            row = [];
-            cur = '';
-            i++;
-          } else {
-            cur += ch;
-            i++;
-          }
+          if (ch === '"') { inQ = true; i++; }
+          else if (ch === ',') { row.push(cur); cur = ''; i++; }
+          else if (ch === '\r') { i++; }
+          else if (ch === '\n') { row.push(cur); rows.push(row); row = []; cur = ''; i++; }
+          else { cur += ch; i++; }
         }
       }
       if (cur !== '' || text.endsWith(',')) row.push(cur);
@@ -239,14 +207,10 @@
     }
     function buildTable(rows) {
       const thead = document.getElementById('table-head'), tbody = document.getElementById('table-body');
-      thead.innerHTML = '';
-      tbody.innerHTML = '';
-      const headers = rows[0],
-        expIdx = headers.indexOf('Explanation');
+      thead.innerHTML = ''; tbody.innerHTML = '';
+      const headers = rows[0], expIdx = headers.indexOf('Explanation');
       const hr = document.createElement('tr');
-      const thToggle = document.createElement('th');
-      thToggle.className = 'toggle-cell';
-      hr.appendChild(thToggle);
+      const thToggle = document.createElement('th'); thToggle.className = 'toggle-cell'; hr.appendChild(thToggle);
       headers.forEach(h => {
         const th = document.createElement('th');
         const label = h === 'iPhone' ? 'iOS' : h;
@@ -257,12 +221,8 @@
       thead.appendChild(hr);
       rows.slice(1).forEach(row => {
         const tr = document.createElement('tr');
-        const tc = document.createElement('td');
-        tc.className = 'toggle-cell';
-        const btn = document.createElement('button');
-        btn.className = 'exp-toggle';
-        btn.textContent = '▶';
-        tc.appendChild(btn);
+        const tc = document.createElement('td'); tc.className = 'toggle-cell';
+        const btn = document.createElement('button'); btn.className = 'exp-toggle'; btn.textContent = '▶'; tc.appendChild(btn);
         tr.appendChild(tc);
         row.forEach((c, i) => {
           const td = document.createElement('td');
@@ -272,11 +232,8 @@
           tr.appendChild(td);
         });
         tbody.appendChild(tr);
-        const er = document.createElement('tr');
-        er.className = 'exp-row';
-        const ec = document.createElement('td');
-        ec.className = 'exp-cell';
-        ec.colSpan = headers.length + 1;
+        const er = document.createElement('tr'); er.className = 'exp-row';
+        const ec = document.createElement('td'); ec.className = 'exp-cell'; ec.colSpan = headers.length + 1;
         ec.textContent = row[expIdx] || '';
         er.appendChild(ec);
         tbody.appendChild(er);
@@ -284,46 +241,32 @@
       document.getElementById('comparison-table').hidden = false;
     }
     function populateCategoryFilter(rows) {
-      const sel = document.getElementById('category-filter'),
-        idx = rows[0].indexOf('Category');
+      const sel = document.getElementById('category-filter'), idx = rows[0].indexOf('Category');
       if (idx < 0) return;
       new Set(rows.slice(1).map(r => r[idx])).forEach(cat => {
-        const o = document.createElement('option');
-        o.value = cat;
-        o.textContent = cat;
-        sel.appendChild(o);
+        const o = document.createElement('option'); o.value = cat; o.textContent = cat; sel.appendChild(o);
       });
       sel.addEventListener('change', filterTable);
       document.getElementById('search-box').addEventListener('input', filterTable);
     }
     function filterTable() {
-      const selVal = document.getElementById('category-filter').value.toLowerCase(),
-        q = document.getElementById('search-box').value.toLowerCase();
-      const rows = Array.from(
-          document.getElementById('comparison-table').tBodies[0].rows
-        ),
-        headers = Array.from(
-          document.querySelectorAll('#comparison-table thead th')
-        ).map(th => th.textContent),
-        catIdx = headers.indexOf('Category');
+      const selVal = document.getElementById('category-filter').value.toLowerCase();
+      const q = document.getElementById('search-box').value.toLowerCase();
+      const rows = Array.from(document.getElementById('comparison-table').tBodies[0].rows);
+      const headers = Array.from(document.querySelectorAll('#comparison-table thead th')).map(th => th.textContent);
+      const catIdx = headers.indexOf('Category');
       for (let i = 0; i < rows.length; i += 2) {
-        const r = rows[i],
-          er = rows[i + 1],
-          cells = Array.from(r.cells).map(td => td.textContent.toLowerCase()),
-          show = (!selVal || cells[catIdx] === selVal) &&
-            (!q || cells.some(c => c.includes(q)));
+        const r = rows[i], er = rows[i + 1];
+        const cells = Array.from(r.cells).map(td => td.textContent.toLowerCase());
+        const show = (!selVal || cells[catIdx] === selVal) && (!q || cells.some(c => c.includes(q)));
         r.style.display = show ? '' : 'none';
         er.style.display = 'none';
       }
     }
     document.addEventListener('click', e => {
       if (e.target.classList.contains('exp-toggle')) {
-        const btn = e.target,
-          tr = btn.closest('tr'),
-          er = tr.nextElementSibling,
-          open = er.style.display === 'table-row';
-        er.style.display = open ? 'none' : 'table-row';
-        btn.textContent = open ? '▶' : '▼';
+        const btn = e.target; const tr = btn.closest('tr'); const er = tr.nextElementSibling;
+        const open = er.style.display === 'table-row'; er.style.display = open ? 'none' : 'table-row'; btn.textContent = open ? '▶' : '▼';
       }
     });
     fetchAndRender();
