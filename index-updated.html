@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Should I Switch?</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="Should I Switch? A side-by-side breakdown of iPhone vs Android features with search and filtering.">
+  <meta name="robots" content="index,follow">
+  <style>
+    :root {
+      --max-width: 1200px;
+      --sidebar-width: 300px;
+      --gap: 16px;
+      font-family: system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+    }
+    body { margin:0; padding:0; background:#f2f4f7; }
+    .container {
+      display:flex;
+      max-width: var(--max-width);
+      margin:0 auto;
+      padding:24px;
+      gap: var(--gap);
+    }
+    .main {
+      flex:1;
+      background:#fff;
+      padding:24px;
+      border-radius:12px;
+      box-shadow:0 4px 20px rgba(0,0,0,0.08);
+      overflow-x:auto;
+    }
+    h1 { margin-top:0; font-size:2.5rem; font-weight:700; text-align:center; }
+    h2 { margin-top:4px; font-size:1.1rem; color:#555; font-weight:400; text-align:center; }
+    .controls {
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin:16px 0;
+      justify-content:center;
+      align-items:center;
+    }
+    .controls label { font-size:0.9rem; }
+    .controls input, .controls select {
+      padding:8px 10px;
+      border:1px solid #ccc;
+      border-radius:6px;
+      font-size:1rem;
+      min-width:200px;
+    }
+    table {
+      width:100%;
+      border-collapse:collapse;
+      margin-top:8px;
+    }
+    th, td {
+      padding:12px 8px;
+      border-bottom:1px solid #e1e4ea;
+      vertical-align:top;
+    }
+    th {
+      background:#f7f9fc;
+      text-align:left;
+      font-weight:600;
+      position:sticky;
+      top:0;
+      z-index:1;
+    }
+    .center { text-align:center; }
+    .sidebar {
+      width: var(--sidebar-width);
+      position:sticky;
+      top:24px;
+      align-self:start;
+      background:#fff;
+      padding:16px;
+      border-radius:12px;
+      box-shadow:0 4px 20px rgba(0,0,0,0.08);
+      font-size:14px;
+    }
+    .ad-box {
+      background:#e8eaf0;
+      border:2px dashed #cfd8e8;
+      padding:16px;
+      margin-bottom:24px;
+      border-radius:8px;
+      min-height:180px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      color:#333;
+    }
+    .mobile-ads { display:none; }
+    @media (max-width:1000px){
+      .mobile-ads { display:block; margin-bottom:16px; }
+      .container { flex-direction:column; }
+      .sidebar { display:none; }
+      .mobile-ads .ad-box:nth-child(2){display:none;}
+    }
+    .footer { text-align:center; font-size:12px; margin-top:40px; color:#888; }
+    .clear-btn { margin-left:8px; cursor:pointer; background:#0070f3; color:#fff; border:none; padding:8px 12px; border-radius:6px; }
+    /* Suggestion modal */
+    #suggestion-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:999; align-items:center; justify-content:center; }
+    #suggestion-modal .dialog { background:#fff; border-radius:12px; max-width:500px; width:100%; padding:24px; position:relative; box-shadow:0 20px 60px rgba(0,0,0,0.2); }
+    #suggestion-modal button.close { position:absolute; top:12px; right:12px; background:none; border:none; font-size:18px; cursor:pointer; }
+    #suggest-btn { position:fixed; bottom:24px; right:24px; background:#ffb400; border:none; padding:14px 18px; border-radius:50px; box-shadow:0 10px 30px rgba(0,0,0,0.2); cursor:pointer; font-weight:600; z-index:900; }
+  </style>
+  <!-- Google Analytics placeholder: replace MEASUREMENT_ID with your GA4 ID -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9644805660093707"
+     crossorigin="anonymous"></script>
+</head>
+<body>
+  <script>
+    // Simple local pageview counter
+    const countKey = 'simple_pageview_count';
+    let count = parseInt(localStorage.getItem(countKey) || '0', 10);
+    count += 1;
+    localStorage.setItem(countKey, count);
+    console.log('Local pageview count', count);
+  </script>
+  
+  <div class="top-ads-wrapper" style="max-width:1200px; margin:0 auto; padding:0 24px;">
+    <div style="display:flex; gap:16px; flex-wrap:wrap; margin-bottom:16px; justify-content:center;">
+      <div class="ad-box" style="flex:1; min-width:300px; max-width:600px;">
+        <div style="font-weight:600;">Advertisement</div>
+        </div>
+      <div class="ad-box" style="flex:1; min-width:300px; max-width:600px;">
+        <div style="font-weight:600;">Advertisement</div>
+        </div>
+    </div>
+  </div>
+
+  <div class="container">
+    
+    <div class="main">
+      <div style="max-width:1000px; margin:0 auto;">
+        <h1><strong>Do I Switch?</strong></h1>
+        <h2>Switching between iphone and android can be a stressful decision. Here we broke it down by category with explanations for each area that you should keep in mind when considering a switch!</h2>
+        <div style="text-align:center; margin:16px 0;">
+          <button id="recommend-btn" aria-label="Recommend a feature" style="padding:12px 20px; background:#ffb400; border:none; border-radius:8px; font-weight:600; cursor:pointer;">Recommend a Feature</button>
+          <h3 style="margin-top:12px; font-size:1rem; font-weight:500;">Help us make this list as thorough as possible!</h3>
+        </div>
+
+        <div class="controls">
+          <div>
+            <label for="category-filter">Filter by category:</label>
+            <select id="category-filter">
+              <option value="">All categories</option>
+              <option value="Accessibility">Accessibility</option>
+<option value="Accessories">Accessories</option>
+<option value="Apps &amp; Stores">Apps &amp; Stores</option>
+<option value="Audio">Audio</option>
+<option value="Automation">Automation</option>
+<option value="Automotive">Automotive</option>
+<option value="Backup &amp; Sync">Backup &amp; Sync</option>
+<option value="Browsing">Browsing</option>
+<option value="Communication">Communication</option>
+<option value="Connectivity">Connectivity</option>
+<option value="Convenience">Convenience</option>
+<option value="Customization">Customization</option>
+<option value="Ecosystem">Ecosystem</option>
+<option value="File Management">File Management</option>
+<option value="File Sharing">File Sharing</option>
+<option value="Hardware">Hardware</option>
+<option value="Health">Health</option>
+<option value="Health &amp; Safety">Health &amp; Safety</option>
+<option value="Interaction">Interaction</option>
+<option value="Location &amp; Tracking">Location &amp; Tracking</option>
+<option value="Media">Media</option>
+<option value="Media &amp; Sharing">Media &amp; Sharing</option>
+<option value="Media Casting">Media Casting</option>
+<option value="Messaging">Messaging</option>
+<option value="Mobility">Mobility</option>
+<option value="Notifications">Notifications</option>
+<option value="Payments">Payments</option>
+<option value="Performance">Performance</option>
+<option value="Power User">Power User</option>
+<option value="Privacy">Privacy</option>
+<option value="Privacy/Health">Privacy/Health</option>
+<option value="Productivity">Productivity</option>
+<option value="Safety">Safety</option>
+<option value="Security">Security</option>
+<option value="Software Experience">Software Experience</option>
+<option value="UI/UX">UI/UX</option>
+<option value="UX">UX</option>
+<option value="Updates">Updates</option>
+<option value="Upgrade Path">Upgrade Path</option>
+<option value="User Management">User Management</option>
+<option value="Voice Assistant">Voice Assistant</option>
+            </select>
+          </div>
+          <div>
+            <label for="search-box">Search:</label>
+            <input type="text" id="search-box" placeholder="Type keywords to filter" />
+          </div>
+          <div>
+            <button id="clear-filters" class="clear-btn">Clear</button>
+          </div>
+        </div>
+        <div style="overflow:auto;">
+          <table aria-label="Comparison table">
+            <thead>
+              <tr>
+                <th>Feature</th>
+                <th>iPhone</th>
+                <th>Android</th>
+                <th>Explanation</th>
+              </tr>
+            </thead>
+            <tbody id="comparison-body">
+            </tbody>
+          </table>
+        </div>
+        <div class="footer">Generated by Joel’s comparison tool.
+          <div style="margin-top:4px; font-size:10px;">Local views (this browser): <span id="local-count"></span></div>
+        </div>
+      </div>
+    </div>
+    
+    
+    <div class="sidebar">
+      <div class="ad-box">
+<div style="font-weight:600;">Advertisement</div>
+</div>
+      <div class="ad-box">
+<div style="font-weight:600;">Advertisement</div>
+</div>
+    </div>
+
+</div>
+      <div class="ad-box">
+<div style="font-weight:600;">Advertisement</div>
+</div>
+    </div>
+
+      <div class="ad-box">
+<div style="font-weight:600;">Advertisement</div>
+</div>
+</div>
+        <div style="margin-top:8px;">Secondary ad or sponsor message.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Suggestion Modal -->
+  <div id="suggestion-modal" aria-hidden="true" style="display:none; flex;">
+    <div class="dialog" role="dialog" aria-modal="true" aria-label="Suggest a feature">
+      <button class="close" id="close-modal" aria-label="Close">&times;</button>
+      <h2 style="margin-top:0;">Recommend a Feature</h2>
+        <div style="text-align:center; margin:16px 0;">
+          <button id="recommend-btn" aria-label="Recommend a feature" style="padding:12px 20px; background:#ffb400; border:none; border-radius:8px; font-weight:600; cursor:pointer;">Recommend a Feature</button>
+          <h3 style="margin-top:12px; font-size:1rem; font-weight:500;">Help us make this list as thorough as possible!</h3>
+        </div>
+
+      <p>Tell us what feature or comparison you'd like to see.</p>
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <div>
+          <label for="suggest-feature">Feature name</label><br/>
+          <input type="text" id="suggest-feature" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:6px;" placeholder="e.g., Cross-platform clipboard" />
+        </div>
+        <div>
+          <label for="suggest-category">Category</label><br/>
+          <select id="suggest-category" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:6px;">
+            <option value="">(optional) choose category</option>
+          </select>
+        </div>
+        <div>
+          <label for="suggest-desc">Description</label><br/>
+          <textarea id="suggest-desc" rows="4" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:6px;" placeholder="Why this matters or what you'd compare"></textarea>
+        </div>
+        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+          <button id="submit-suggestion" style="padding:10px 16px; background:#0070f3; color:#fff; border:none; border-radius:6px; cursor:pointer;">Send Suggestion</button>
+          <div id="suggestion-feedback" style="flex:1; align-self:center; font-size:14px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+  <script>
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+<script>
+  function symbolify(value) {
+    if (!value) return '';
+    const v = value.trim().toLowerCase();
+    if (v === 'check' || v === '✔' || v === 'yes' || v === '✅' || v === '✓') return '✅';
+    if (v === 'x' || v === '✖' || v === 'no' || v === '❌') return '❌';
+    if (v === 'caveat' || v === '!' || v === 'warning' || v === '⚠️') return '⚠️';
+    return value;
+  }
+
+  let comparisonData = [];
+  const csvUrl = 'https://raw.githubusercontent.com/itsjoelscott/do-i-switch/dd1a495e542652fc1b4254ce4af69496b1c6da5f/comparison.csv';
+
+  function loadComparisonData(callback) {
+    Papa.parse(csvUrl, {
+      download: true,
+      header: true,
+      skipEmptyLines: true,
+      complete: function(results) {
+        comparisonData = results.data.map(r => ({
+          Feature: r.Feature || '',
+          iPhone: symbolify(r.iPhone || r['iPhone'] || ''),
+          Android: symbolify(r.Android || r['Android'] || ''),
+          Explanation: r.Explanation || '',
+          Category: r.Category || ''
+        }));
+        if (typeof callback === 'function') callback();
+      },
+      error: function(err) {
+        console.error('Failed to load CSV:', err);
+        const tbody = document.getElementById('comparison-body');
+        if (tbody) tbody.innerHTML = '<tr><td colspan="4">Failed to load comparison data.</td></tr>';
+      }
+    });
+  }
+
+  function renderTable(filterCategory, searchQuery) {
+    const tbody = document.getElementById('comparison-body');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+    const query = (searchQuery || '').trim().toLowerCase();
+    comparisonData.forEach(row => {
+      if (filterCategory && row.Category !== filterCategory) return;
+      if (query) {
+        const inFeature = row.Feature.toLowerCase().includes(query);
+        const inExplanation = row.Explanation.toLowerCase().includes(query);
+        if (!inFeature && !inExplanation) return;
+      }
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${row.Feature}</td>
+        <td class="center">${row.iPhone}</td>
+        <td class="center">${row.Android}</td>
+        <td>${row.Explanation}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function populateModalCategories() {
+    const categorySelectModal = document.getElementById('suggest-category');
+    if (categorySelectModal) {
+      categorySelectModal.innerHTML = '<option value="">(optional) choose category</option>';
+      const categories = Array.from(new Set(comparisonData.map(r => r.Category).filter(c => c)));
+      categories.sort();
+      categories.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c;
+        opt.textContent = c;
+        categorySelectModal.appendChild(opt);
+      });
+    }
+    const mainFilter = document.getElementById('category-filter');
+    if (mainFilter) {
+      mainFilter.innerHTML = '<option value="">All Categories</option>';
+      const categories = Array.from(new Set(comparisonData.map(r => r.Category).filter(c => c)));
+      categories.sort();
+      categories.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c;
+        opt.textContent = c;
+        mainFilter.appendChild(opt);
+      });
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    loadComparisonData(() => {
+      renderTable('', '');
+      populateModalCategories();
+
+      const categorySelect = document.getElementById('category-filter');
+      const searchBox = document.getElementById('search-box');
+      const clearBtn = document.getElementById('clear-filters');
+
+      function applyFilters() {
+        renderTable(categorySelect?.value || '', searchBox?.value || '');
+      }
+      if (categorySelect) categorySelect.addEventListener('change', applyFilters);
+      if (searchBox) searchBox.addEventListener('input', applyFilters);
+      if (clearBtn) {
+        clearBtn.addEventListener('click', () => {
+          if (categorySelect) categorySelect.value = '';
+          if (searchBox) searchBox.value = '';
+          renderTable('', '');
+        });
+      }
+
+      const countEl = document.getElementById('local-count');
+      if (countEl) {
+        countEl.textContent = localStorage.getItem('simple_pageview_count') || '0';
+      }
+    });
+  });
+</script>
+
+  <div style="display:none;"></div>
+</body>
+</html>
