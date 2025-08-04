@@ -1,0 +1,131 @@
+#,Feature,Category,iPhone,Android,Explanation
+1,iMessage,Messaging,✅,❌,Apple’s proprietary; unavailable on Android.
+2,SMS/MMS,Messaging,✅,✅,Standard texting interoperates.
+3,RCS (rich messaging),Messaging,❌,✅,Rich communication standard native to Android.
+4,FaceTime,Communication,✅,❌,Apple video call system; no native Android support.
+5,"Third-party video calls (Zoom, Meet)",Communication,✅,✅,Cross-platform apps work both.
+6,AirDrop,File Sharing,✅,❌,Apple’s seamless peer share; Android has Nearby Share (⚠️) but no cross-platform with iOS.
+7,Universal Clipboard (Apple devices),Productivity,✅,❌,Clipboard syncing across Apple gear is lost.
+8,Handoff / Continuity,Ecosystem,✅,❌,Cross-device session handoff doesn’t carry over.
+9,Call/Text relay to desktop (Mac),Ecosystem,✅,❌,Native bridging to Mac unavailable.
+10,App Store curation/review,Apps & Stores,✅,⚠️,Android Play Store is less curated—more freedom but more variability in quality.
+11,System-wide Dark Mode,UI/UX,✅,✅,Both support.
+12,Home screen widgets,Customization,✅,✅,Android offers more flexibility.
+13,Default app selection,Customization,❌,✅,Android lets you choose defaults freely.
+14,Custom launchers / full UI theming,Customization,❌,✅,Android supports deep personalization.
+15,Face ID (secure biometric),Security,✅,⚠️,Android has face unlock variants; security and consistency vary by manufacturer.
+16,Touch ID / fingerprint,Security,✅,✅,Both platforms support biometric unlocking (Android varies by device).
+17,Siri,Voice Assistant,✅,❌,Apple assistant not on Android.
+18,Google Assistant,Voice Assistant,⚠️,✅,Available on iPhone via app (less integrated); native and deeper on Android.
+19,App Clips / Instant Apps,Productivity,✅,⚠️,Android has Instant Apps but discovery/behavior differences exist.
+20,Built-in screen recording,Productivity,✅,✅,Both platforms include; Android had historical OEM variation but now common.
+21,iCloud backup,Backup & Sync,✅,❌,iOS cloud backup doesn’t transfer; Android uses Google or OEM backups.
+22,Google backup (contacts/settings/apps),Backup & Sync,⚠️,✅,Limited on iPhone; native & broader on Android.
+23,Find My (Apple),Location & Tracking,✅,❌,"Android has Find My Device, separate ecosystem."
+24,End-to-end encrypted native messaging,Security,✅,❌,iMessage encryption lost.
+25,Shared iCloud photo albums,Media & Sharing,✅,⚠️,Google Photos similar but cross-platform gap with Apple users.
+26,Live Text / OCR in photos,Productivity,✅,✅,Equivalent via Google Lens on Android.
+27,Visual Lookup / object recognition,Productivity,✅,✅,Android has similar capabilities (Google).
+28,App privacy labels,Privacy,✅,⚠️,Play Store’s disclosures are less uniform.
+29,Granular app permission prompts,Privacy,✅,✅,Both give controls; Android often more granular.
+30,Hardware-backed key storage (Secure Enclave / TEE),Security,✅,✅,Both platforms have secure elements.
+31,OS update cadence & control,Updates,✅,⚠️,iOS is uniform; Android depends on OEM (Pixel is closest).
+32,Long-term OS support guarantee,Updates,✅,⚠️,Apple covers many years; only some Android flagships match.
+33,Family Sharing (apps/purchases),Ecosystem,✅,⚠️,Google Family Library exists but less integrated.
+34,Bundled subscription tiers (Apple One),Ecosystem,✅,❌,No direct cross-service bundling on Android.
+35,AirPlay (output to Apple TV / speakers),Media Casting,✅,❌,Android uses Chromecast/Miracast; incompatible with AirPlay targets.
+36,Chromecast support,Media Casting,⚠️,✅,Native on Android; iOS needs app integration.
+37,Wi-Fi calling (carrier),Connectivity,✅,✅,"Supported on both, carrier-dependent."
+38,Visual voicemail transcription,Productivity,✅,⚠️,Android support varies by carrier/device.
+39,Emergency SOS shortcut,Safety,✅,✅,Both have hardware-triggered emergency features.
+40,Medical ID on lock screen,Health & Safety,✅,⚠️,Android has equivalents but differing interfaces.
+41,Apple Wallet & passes,Payments,✅,❌,Google Wallet exists but not interoperable.
+42,NFC tap-to-pay,Payments,✅,✅,Supported on both (varies by region/device).
+43,Transit card integration in wallet,Mobility,✅,⚠️,Available on Android but regional/implementation differences.
+44,Biometric-secured mobile payments,Security,✅,✅,Both support.
+45,AirTags / Find My accessory network,Location & Tracking,✅,❌,Android can't tap into Apple’s Find My network.
+46,U1 chip spatial features (precision finding),Hardware,✅,❌,No equivalent integrated spatial ecosystem on Android broadly.
+47,System keyboard & emoji,UX,✅,✅,Both have rich keyboards; Android more swappable.
+48,Quick Settings customization,UI/UX,❌,✅,Android allows rearranging/enabling tiles freely.
+49,Screen Time / Digital Wellbeing,Productivity,✅,✅,Both platforms track usage; interface differences.
+50,Focus modes / scheduled Do Not Disturb,Productivity,✅,✅,Analogous features exist on Android.
+51,Apple Watch pairing,Accessories,✅,❌,Apple Watch only works with iPhone.
+52,Third-party smartwatch breadth,Accessories,❌,✅,Android pairs with many brands.
+53,AirPods full spatial audio/head tracking,Audio,✅,⚠️,Partial functionality on Android; lacks seamless integration.
+54,AirPods automatic device switching,Audio,✅,❌,Feature is Apple ecosystem specific.
+55,iCloud Drive file sync,Backup & Sync,✅,❌,Need Google Drive or equivalents on Android.
+56,Native Notes app with sync,Productivity,✅,❌,Must migrate or use third-party.
+57,Safari tab/reading list sync,Browsing,✅,❌,Chrome/others are separate ecosystems.
+58,Apple News feed personalization,Media,✅,❌,Google News differs; no direct port.
+59,Lock screen widgets (iOS 16+),UI/UX,✅,⚠️,Android offers more options but varies by OEM.
+60,Wallpaper depth / dynamic effects,UI/UX,✅,⚠️,Android has similar but different implementations.
+61,App Library auto-organization,UX,✅,⚠️,Android has app drawer; conceptually similar but layout differs.
+62,Live Activities (dynamic live info),Productivity,✅,⚠️,Android equivalents exist but less standardized.
+63,Built-in webpage translation,Browsing,✅,✅,Chrome/Google services mirror feature on Android.
+64,Biometric autofill password unlocking,Security,✅,✅,Comparable on both.
+65,iCloud Keychain cross-device password sync,Security,✅,❌,Requires third-party or Google Password Manager separately.
+66,Secure Wi-Fi password sharing,Convenience,✅,✅,Android uses QR/Nearby mechanisms.
+67,iOS-exclusive apps/games,Apps & Stores,✅,❌,Some titles remain iOS-only.
+68,Cross-platform feature parity (app behavior differences),Apps & Stores,⚠️,⚠️,Many apps exist but may diverge in features.
+69,Built-in keyboard swapping restriction,Customization,✅,⚠️,iOS is locked to allowed keyboards; Android freely swaps.
+70,3D Touch / pressure UI cues (legacy),Interaction,⚠️,✅,Android uses long-press equivalents; implementation differs.
+71,CarPlay,Automotive,✅,❌,Replaced by Android Auto on Android.
+72,Android Auto access,Automotive,❌,✅,Native on Android; limited on iPhone.
+73,Siri Shortcuts automation,Automation,✅,⚠️,Android has routines/Tasker equivalents but is more fragmented.
+74,Consistent shortcut scripting,Automation,✅,⚠️,Android options vary across apps/devices.
+75,App privacy report (tracking transparency),Privacy,✅,✅,Both expose some tracking data.
+76,Multi-user profiles (tablet),User Management,❌,✅,Android supports separate users.
+77,Guest mode / secondary profiles,User Management,❌,✅,Android has guest sessions; iOS lacks.
+78,Open file system access,File Management,❌,✅,Android allows broader direct file manipulation.
+79,Sandboxed apps,Security,✅,✅,Both enforce isolation.
+80,Rooting / custom ROM ability,Power User,❌,✅,Android allows deeper modification at cost of warranty/security.
+81,Voice memos / quick audio notes,Productivity,✅,✅,"Both have equivalents (e.g., Google Recorder)."
+82,Live voicemail transcription,Productivity,✅,⚠️,Android depends on carrier/device.
+83,Built-in QR scanning via camera,Convenience,✅,✅,Both now support natively.
+84,"Lock screen quick shortcuts (wallet, camera)",UX,✅,✅,Both provide fast actions.
+85,Spatial audio system integration,Audio,✅,⚠️,Fragmented on Android; available on some devices.
+86,Crash detection / emergency location,Safety,✅,✅,Available on both (implementation differs).
+87,Seamless accessory pairing (Apple-style),Convenience,✅,❌,Android pairing less unified unless same brand.
+88,Offline “Find My” network for lost devices,Location & Tracking,✅,❌,Apple’s network not accessible on Android.
+89,Widget flexibility in multitask/overview,UI/UX,⚠️,✅,Android’s overview offers deeper widget embedding.
+90,First-party email app (Mail / Gmail),Productivity,✅,✅,Both have native clients.
+91,Native HEVC video codec support,Media,✅,⚠️,Android support varies by hardware.
+92,"Accessibility suite (VoiceOver, Dynamic Type)",Accessibility,✅,✅,Android has analogous features.
+93,Built-in VPN configuration support,Privacy,✅,✅,Both support VPNs; Android offers more app-level control.
+94,Uniform system UI across all devices,UX,✅,❌,Android OEM skins cause fragmentation.
+95,Consistent performance/boot optimization,Performance,✅,⚠️,Android varies; premium achieves parity.
+96,"Mac ecosystem integration (Handoff, AirDrop to Mac)",Ecosystem,✅,❌,Lost unless third-party bridges used.
+97,iCloud Photo Library / Live Photos,Media,✅,❌,No native equivalent; Live Photos behave differently.
+98,Consistent widget styling,UI/UX,✅,⚠️,Android widgets vary widely.
+99,Seamless iOS-to-iOS app data restore,Backup & Sync,✅,❌,Android migration from iOS requires tools.
+100,Centralized trade-in / upgrade program,Upgrade Path,✅,⚠️,"Android OEMs offer programs, but less centralized."
+101,Split-screen multitasking,Productivity,❌,✅,Android supports true split-screen; iPhone limited to Stage Manager (iPad) or recent multitask.
+102,Picture-in-picture for video,Media,✅,✅,"Both support, with differing UI."
+103,App cloning / dual instances,Productivity,❌,✅,Some Androids allow multiple instances of same app.
+104,Side-loading apps (APK installation),Apps & Stores,❌,✅,Android allows installing outside official store (with security caveats).
+105,Changing default browser/search engine,Customization,❌,✅,Android freely lets you swap.
+106,System-wide translation overlay,Productivity,❌,✅,Android (via Google Translate/Lens) offers in-line translation more broadly.
+107,"NFC reader modes (e.g., card emulation)",Connectivity,⚠️,✅,Android often exposes more NFC capabilities; iPhone is restricted.
+108,eSIM support management,Connectivity,✅,✅,Both now support eSIM; Android UI varies by OEM.
+109,Expandable storage (microSD),Hardware,❌,✅,Rare on iPhone; some Androids have slots.
+110,USB-C universal port,Hardware,❌,✅,iPhone uses Lightning (transitioning); Android standardizes on USB-C.
+111,Repairability / third-party repairs,Hardware,⚠️,✅,iPhone is more locked down; Android devices often easier to repair (varies by brand).
+112,Wireless charging (Qi),Hardware,✅,✅,"Supported on many of both, but standardization differs."
+113,Reverse wireless charging,Hardware,❌,✅,More common on Android flagships.
+114,Water/dust resistance rating consistency,Hardware,✅,⚠️,iPhone consistently rated; Android varies by model.
+115,Preinstalled OEM bloatware,Software Experience,❌,⚠️,iPhone is cleaner; many Androids come with extra apps.
+116,DLNA / local media streaming,Media,⚠️,✅,Android often has native/local streaming apps; iOS limited without third-party.
+117,Developer options / ADB access,Power User,❌,✅,Android exposes deep dev controls.
+118,Bootloader unlocking,Power User,❌,✅,Possible on many Androids (voids warranty); impossible on iPhone.
+119,"System theming (icon packs, fonts)",Customization,❌,✅,Android allows broad theming.
+120,Scheduled dark/light mode,UI/UX,✅,✅,Both can schedule modes (Android generally more customizable).
+121,Adaptive battery / AI power management,Performance,✅,✅,Both have intelligent battery features (Android often more explicit).
+122,Notification channels / granular control,Notifications,❌,✅,Android gives per-type control; iOS has summary but less granular historically.
+123,Notification summary / focus-delivered digests,Notifications,✅,⚠️,iOS has summary; Android offers variants via apps.
+124,Global undo (shake to undo style),Interaction,✅,⚠️,Android uses different gestures/tools; not uniform.
+125,Exposure notifications (public health APIs),Privacy/Health,✅,✅,Both supported when active (depends on policy).
+126,Multi-SIM UI management,Connectivity,✅,✅,Both now handle dual SIM (iPhone via eSIM+physical; Android often has dual trays).
+127,"Rich lock screen shortcuts (widgets, media)",UX,✅,✅,"Both offer, but style/interaction differ."
+128,"Cross-device audio handoff (e.g., AirPods between Apple gear)",Audio,✅,❌,Android lacks seamless switching across dissimilar devices unless same brand ecosystem.
+129,Backup of Health data across devices,Health,✅,❌,Apple Health sync doesn’t port; Android requires third-party solutions.
+130,Intent-based inter-app communication,Productivity,❌,✅,Android’s intent system enables richer app-to-app actions.
